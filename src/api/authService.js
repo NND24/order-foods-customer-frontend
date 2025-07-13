@@ -9,40 +9,22 @@ const register = async (userData) => {
 };
 
 const login = async (userData) => {
-  try {
-    const response = await instance.post("/auth/login", userData);
+  const response = await instance.post("/auth/login", userData);
 
-    if (response.data) {
-      localStorage.setItem("userId", JSON.stringify(response.data._id));
-      localStorage.setItem("token", JSON.stringify(response.data.token));
-      return response.data;
-    } else {
-      toast.error("Login failed. Please try again later.");
-    }
-  } catch (error) {
-    if (error.response) {
-      toast.error("Invalid username or password.");
-      throw error;
-    }
+  if (response.data) {
+    localStorage.setItem("userId", JSON.stringify(response.data._id));
+    localStorage.setItem("token", JSON.stringify(response.data.token));
+    return response.data;
   }
 };
 
 const loginWithGoogle = async (userData) => {
-  try {
-    const response = await instance.post("/auth/login/google", userData);
+  const response = await instance.post("/auth/login/google", userData);
 
-    if (response.data) {
-      localStorage.setItem("userId", JSON.stringify(response.data._id));
-      localStorage.setItem("token", JSON.stringify(response.data.token));
-      return response.data;
-    } else {
-      toast.error("Login failed. Please try again later.");
-    }
-  } catch (error) {
-    if (error.response) {
-      toast.error("Invalid username or password.");
-      throw error;
-    }
+  if (response.data) {
+    localStorage.setItem("userId", JSON.stringify(response.data._id));
+    localStorage.setItem("token", JSON.stringify(response.data.token));
+    return response.data;
   }
 };
 
