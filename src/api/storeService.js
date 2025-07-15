@@ -1,8 +1,7 @@
 import { config, instance } from "../utils/axiosConfig";
-import { toast } from "react-toastify";
 
 const getAllStore = async ({ name, category, sort, limit, page, lat, lon }) => {
-  const response = await instance.get(`/customerStore/`, {
+  const response = await instance.get(`/customer-store/`, {
     params: { name, category, sort, limit, page, lat, lon },
   });
 
