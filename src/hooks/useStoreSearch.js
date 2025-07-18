@@ -3,7 +3,7 @@ import { storeService } from "@/api/storeService";
 import { toast } from "react-toastify";
 import { useProvince } from "@/context/provinceContext";
 
-export const useStoreSearch = (query = {}) => {
+export const useStoreSearch = (query) => {
   const { currentLocation } = useProvince();
 
   const [loading, setLoading] = useState(false);
@@ -15,8 +15,6 @@ export const useStoreSearch = (query = {}) => {
   const lat = currentLocation.lat === 200 ? 10.762622 : currentLocation.lat;
   const lon = currentLocation.lon === 200 ? 106.660172 : currentLocation.lon;
 
-  const finalQuery = useMemo(() => query, []);
-
   useEffect(() => {
     if (!currentLocation || currentLocation.lat === undefined || currentLocation.lon === undefined) return;
 
@@ -26,14 +24,14 @@ export const useStoreSearch = (query = {}) => {
 
       try {
         const [all, rating, standout] = await Promise.all([
-          storeService.getAllStore({ ...finalQuery, sort: "", lat, lon }),
-          storeService.getAllStore({ ...finalQuery, sort: "rating", lat, lon }),
-          storeService.getAllStore({ ...finalQuery, sort: "standout", lat, lon }),
+          storeService.getAllStore({ ...query, sort: "", lat, lon }),
+          storeService.getAllStore({ sort: "rating", lat, lon }),
+          storeService.getAllStore({ sort: "standout", lat, lon }),
         ]);
 
-        setAllStore(all || []);
-        setRatingStore(rating || []);
-        setStandoutStore(standout || []);
+        setAllStore(all);
+        setRatingStore(rating);
+        setStandoutStore(standout);
       } catch (err) {
         console.error("Failed to fetch stores:", err);
         setError(err);
@@ -44,7 +42,7 @@ export const useStoreSearch = (query = {}) => {
     };
 
     fetchStores();
-  }, [finalQuery, lat, lon]);
+  }, [query, lat, lon]);
 
   return {
     loading,

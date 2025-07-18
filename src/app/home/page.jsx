@@ -21,7 +21,9 @@ const page = () => {
       {ratingStore && ratingStore?.data?.length > 0 && <Hero allStore={ratingStore.data} />}
 
       <div className='md:w-[90%] md:mx-auto'>
-        <div className='px-[20px] pt-[20px] md:px-0'>{/* <CategorySlider /> */}</div>
+        <div className='px-[20px] pt-[20px] md:px-0'>
+          <CategorySlider />
+        </div>
 
         <div className='my-[20px] md:hidden'>
           <div className='flex items-center justify-between px-[20px] md:px-0 md:mb-[10px]'>

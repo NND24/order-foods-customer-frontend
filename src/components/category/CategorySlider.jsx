@@ -7,21 +7,21 @@ import CategoryItem from "./CategoryItem";
 import { systemCategoryService } from "@/api/systemCategoryService";
 
 const CategorySlider = () => {
-  const [allCategory, setAllCategory] = useState([]);
+  const [allCategories, setAllCategories] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchCategory = async () => {
+    const fetchCategories = async () => {
       try {
         const result = await systemCategoryService.getAllSystemCategory();
-        setAllCategory(result || []);
+        setAllCategories(result.data);
       } catch (error) {
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCategory();
+    fetchCategories();
   }, []);
 
   return (
@@ -55,8 +55,8 @@ const CategorySlider = () => {
         },
       }}
     >
-      {allCategory &&
-        allCategory.map((type) => (
+      {allCategories &&
+        allCategories.map((type) => (
           <SwiperSlide key={type._id}>
             <CategoryItem type={type} />
           </SwiperSlide>

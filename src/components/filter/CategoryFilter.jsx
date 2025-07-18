@@ -49,7 +49,7 @@ const CategoryFilter = () => {
     const fetchCategories = async () => {
       try {
         const result = await systemCategoryService.getAllSystemCategory();
-        setAllCategories(result || []);
+        setAllCategories(result.data);
       } catch (error) {
       } finally {
         setLoading(false);

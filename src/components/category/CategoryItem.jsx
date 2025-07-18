@@ -45,7 +45,7 @@ const CategoryItem = ({ type }) => {
 
   return (
     <div
-      className='category-item  relative flex flex-col items-center gap-[4px] w-fit cursor-pointer'
+      className='category-item relative flex flex-col items-center gap-[4px] w-fit cursor-pointer'
       onClick={handleCategoryClick}
       data-category-name={category.name}
     >

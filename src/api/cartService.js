@@ -2,7 +2,7 @@ import { config, instance } from "../utils/axiosConfig";
 import { toast } from "react-toastify";
 
 const getUserCart = async () => {
-  const response = await instance.get(`/cart/register`, config);
+  const response = await instance.get(`/cart/`, config);
   if (response.data) {
     return response.data;
   }

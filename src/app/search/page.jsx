@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Header from "@/components/header/Header";
@@ -18,15 +18,18 @@ const page = () => {
   const searchParams = useSearchParams();
   const [openFilter, setOpenFilter] = useState(null);
 
-  const query = {
-    name: searchParams.get("name") || "",
-    category: searchParams.get("category") || "",
-    sort: searchParams.get("sort") || "",
-    limit: searchParams.get("limit") || "20",
-    page: searchParams.get("page") || "1",
-  };
+  const query = useMemo(
+    () => ({
+      name: searchParams.get("name") || "",
+      category: searchParams.get("category") || "",
+      sort: searchParams.get("sort") || "",
+      limit: searchParams.get("limit") || "20",
+      page: searchParams.get("page") || "1",
+    }),
+    [searchParams.toString()]
+  );
 
-  const { allStore, ratingStore, standoutStore, loading, error } = useStoreSearch({ query });
+  const { allStore, ratingStore, standoutStore, loading, error } = useStoreSearch(query);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -109,8 +112,8 @@ const page = () => {
 
                 <div className='hidden md:block z-0'>
                   <div className='grid lg:grid-cols-2 md:grid-cols-1 gap-[20px]'>
-                    {allStore ? (
-                      allStore.data.map((store) => <StoreBigCard key={store._id} store={store} />)
+                    {allStore?.data?.length > 0 ? (
+                      allStore?.data.map((store) => <StoreBigCard key={store._id} store={store} />)
                     ) : (
                       <h3 className='text-[20px] text-[#4a4b4d] font-semibold'>Không tìm thấy cửa hàng nào</h3>
                     )}
@@ -128,7 +131,7 @@ const page = () => {
                     Quán ăn nổi bật
                   </h3>
                   <ul className='flex flex-col gap-[8px] p-[8px] max-h-[255px] w-full overflow-y-auto overflow-x-hidden small-scrollbar box-border'>
-                    {standoutStore &&
+                    {standoutStore?.data?.length > 0 &&
                       standoutStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)}
                   </ul>
                 </div>
@@ -138,7 +141,8 @@ const page = () => {
                     Quán ăn được đánh giá tốt
                   </h3>
                   <ul className='flex flex-col gap-[8px] p-[8px] max-h-[255px] w-full overflow-y-auto overflow-x-hidden small-scrollbar box-border'>
-                    {ratingStore && ratingStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)}
+                    {ratingStore?.data?.length > 0 &&
+                      ratingStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)}
                   </ul>
                 </div>
 
@@ -150,7 +154,7 @@ const page = () => {
 
             <div className='block md:hidden'>
               <div className='flex flex-col gap-[10px]'>
-                {allStore ? (
+                {allStore?.data?.length > 0 ? (
                   allStore.data.map((store) => <StoreBigCard key={store._id} store={store} />)
                 ) : (
                   <h3 className='text-[20px] text-[#4a4b4d] font-semibold'>Không tìm thấy cửa hàng nào</h3>
@@ -158,7 +162,7 @@ const page = () => {
               </div>
             </div>
 
-            {allStore && <Pagination page={page} limit={limit} total={allStore.total} />}
+            {allStore?.data?.length > 0 && <Pagination page={page} limit={query.limit} total={allStore.total} />}
           </div>
         </div>
       )}
