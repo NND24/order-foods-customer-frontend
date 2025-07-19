@@ -10,9 +10,18 @@ import Hero from "@/components/hero/Hero";
 import ListStore from "@/components/store/ListStore";
 import StoreBigSlider from "@/components/store/StoreBigSlider";
 import { useStoreSearch } from "@/hooks/useStoreSearch";
+import { Atom } from "react-loading-indicators";
 
 const page = () => {
-  const { allStore, ratingStore, standoutStore, loading, error } = useStoreSearch();
+  const { allStore, ratingStore, standoutStore, loading: storeLoading } = useStoreSearch();
+
+  if (storeLoading) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <Atom color='#fc6011' size='medium' text='' textColor='' />
+      </div>
+    );
+  }
 
   return (
     <div className='pt-[140px] pb-[100px] md:pt-[75px]' name='home_page'>

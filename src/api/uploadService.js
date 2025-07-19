@@ -1,8 +1,7 @@
 import { config, instance } from "../utils/axiosConfig";
-import { toast } from "react-toastify";
 
 const uploadImages = async (data) => {
-  const response = await instance.post(`/upload/images`, data, config);
+  const response = await instance.post(`/upload/images`, data, config());
 
   if (response.data) {
     return response.data;
@@ -10,14 +9,14 @@ const uploadImages = async (data) => {
 };
 
 const uploadAvatar = async (data) => {
-  const response = await instance.post(`/upload/avatar`, data, config);
+  const response = await instance.post(`/upload/avatar`, data, config());
   if (response.data) {
     return response.data;
   }
 };
 
 const deleteFile = async (data) => {
-  const response = await instance.delete(`/upload/delete-file`, data, config);
+  const response = await instance.delete(`/upload/delete-file`, data, config());
   if (response.data) {
     return response.data;
   }

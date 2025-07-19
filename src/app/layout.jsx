@@ -5,10 +5,26 @@ import "react-toastify/dist/ReactToastify.css";
 import { HelmetProvider } from "react-helmet-async";
 import { ForgotPassEmailProvider } from "@/context/forgotPassEmailContext";
 import { ProvinceProvider } from "@/context/provinceContext";
-import { CartProvider } from "@/context/CartContext";
-import { OrderProvider } from "@/context/OrderContext";
-import { FavoriteProvider } from "@/context/FavoriteContext";
-import { SocketProvider } from "@/context/SocketContext";
+import { CartProvider } from "@/context/cartContext";
+import { OrderProvider } from "@/context/orderContext";
+import { FavoriteProvider } from "@/context/favoriteContext";
+import { SocketProvider } from "@/context/socketContext";
+import { AuthProvider, useAuth } from "@/context/authContext";
+import { Atom } from "react-loading-indicators";
+
+function AppProviders({ children }) {
+  const { loading: authLoading } = useAuth();
+
+  if (authLoading) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <Atom color='#fc6011' size='medium' text='' textColor='' />
+      </div>
+    );
+  }
+
+  return children;
+}
 
 export default function RootLayout({ children }) {
   return (
@@ -16,29 +32,33 @@ export default function RootLayout({ children }) {
       <body>
         <HelmetProvider>
           <ForgotPassEmailProvider>
-            <SocketProvider>
-              <ProvinceProvider>
-                <CartProvider>
-                  <OrderProvider>
-                    <FavoriteProvider>
-                      {children}
-                      <ToastContainer
-                        position='top-right'
-                        autoClose={5000}
-                        hideProgressBar={false}
-                        newestOnTop={false}
-                        closeOnClick
-                        rtl={false}
-                        pauseOnFocusLoss
-                        draggable
-                        pauseOnHover
-                        theme='light'
-                      />
-                    </FavoriteProvider>
-                  </OrderProvider>
-                </CartProvider>
-              </ProvinceProvider>
-            </SocketProvider>
+            <AuthProvider>
+              <SocketProvider>
+                <ProvinceProvider>
+                  <CartProvider>
+                    <OrderProvider>
+                      <FavoriteProvider>
+                        <AppProviders>
+                          {children}
+                          <ToastContainer
+                            position='top-right'
+                            autoClose={5000}
+                            hideProgressBar={false}
+                            newestOnTop={false}
+                            closeOnClick
+                            rtl={false}
+                            pauseOnFocusLoss
+                            draggable
+                            pauseOnHover
+                            theme='light'
+                          />
+                        </AppProviders>
+                      </FavoriteProvider>
+                    </OrderProvider>
+                  </CartProvider>
+                </ProvinceProvider>
+              </SocketProvider>
+            </AuthProvider>
           </ForgotPassEmailProvider>
         </HelmetProvider>
       </body>

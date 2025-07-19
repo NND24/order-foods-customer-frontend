@@ -1,13 +1,22 @@
 "use client";
+import { useAuth } from "@/context/authContext";
+import { useCart } from "@/context/cartContext";
+import { useFavorite } from "@/context/favoriteContext";
+import { useSocket } from "@/context/socketContext";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 
 const NavBar = ({ page }) => {
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const { user } = useAuth();
+
+  const { notifications } = useSocket();
+  const { favorite } = useFavorite();
+  const { cart } = useCart();
+
   return (
     <div className='fixed bottom-0 right-0 left-0 z-[99] pt-[5px] bg-[#fff] w-full h-[75px] px-[25px] shadow-[0px_-10px_40px_0px_rgba(110,110,110,0.45)] md:relative md:w-fit md:p-0 md:shadow-none'>
-      {!userId ? (
+      {!user ? (
         <div className='flex items-center gap-[20px] h-[75px]'>
           <Link
             href='/auth/login'
@@ -51,6 +60,14 @@ const NavBar = ({ page }) => {
               >
                 Thông báo
               </p>
+
+              {notifications.filter((noti) => noti.status === "unread").length > 0 && (
+                <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
+                  <span className='text-[11px] text-white'>
+                    {notifications.filter((noti) => noti.status === "unread").length}
+                  </span>
+                </div>
+              )}
             </Link>
 
             <Link href='/orders' className='group flex flex-col items-center gap-[1px]' id='ordersUrl' name='orderBtn'>
@@ -113,6 +130,12 @@ const NavBar = ({ page }) => {
                 >
                   Giỏ hàng
                 </p>
+
+                {cart && cart.length > 0 && (
+                  <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
+                    <span className='text-[11px] text-white'>{cart.length}</span>
+                  </div>
+                )}
               </Link>
             </div>
 
@@ -139,6 +162,12 @@ const NavBar = ({ page }) => {
                 >
                   Yêu Thích
                 </p>
+
+                {favorite && favorite.store.length > 0 && (
+                  <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
+                    <span className='text-[11px] text-white'>{favorite.store.length}</span>
+                  </div>
+                )}
               </Link>
             </div>
 

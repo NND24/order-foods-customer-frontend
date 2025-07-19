@@ -30,9 +30,9 @@ const page = () => {
     onSubmit: async (values) => {
       try {
         await authService.login(values);
+        router.push("/home");
         toast.success("Đăng nhập thành công!");
         formik.resetForm();
-        router.push("/");
       } catch (error) {
         toast.error(error.response.data.message);
       }

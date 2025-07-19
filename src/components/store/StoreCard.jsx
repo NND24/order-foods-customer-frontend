@@ -5,7 +5,7 @@ import React from "react";
 const StoreCard = ({ store }) => {
   return (
     <Link
-      href={`/restaurant/${store._id}`}
+      href={`/store/${store._id}`}
       className='flex gap-[10px] items-start h-fit md:shadow-[rgba(0,0,0,0.24)_0px_3px_8px] md:border md:border-[#a3a3a3a3] md:border-solid md:rounded-[8px] md:p-[10px]'
     >
       <div className='relative flex flex-col gap-[4px] w-[90px] h-[90px] pt-[90px]'>

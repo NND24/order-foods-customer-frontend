@@ -1,18 +1,19 @@
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { getClosestProvince } from "../../utils/functions";
-import { provinces } from "../../utils/constants";
+import { useAuth } from "@/context/authContext";
+import { provinces } from "@/utils/constants";
+import { getClosestProvince } from "@/utils/functions";
 
 const MobileHeader = ({ page }) => {
   const [province, setProvince] = useState({ name: "", lat: 200, lon: 200 });
   const [openSelectProvince, setOpenSelectProvince] = useState(false);
 
+  const { user } = useAuth();
+
   const handleProvinceChange = (prov) => {
     setProvince(prov);
   };
-
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
   useEffect(() => {
     if ("geolocation" in navigator) {
@@ -69,7 +70,7 @@ const MobileHeader = ({ page }) => {
             </div>
           )}
         </div>
-        {userId && (
+        {user && (
           <>
             <Link href='/notifications' className='relative group flex flex-col items-center gap-[1px]'>
               <Image

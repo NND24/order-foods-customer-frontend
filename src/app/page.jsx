@@ -3,12 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/authContext";
 
 export default function Home() {
   const router = useRouter();
 
   const [loading, setLoading] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+
+  const { user } = useAuth();
 
   useEffect(() => {
     // Kiểm tra kích thước màn hình
@@ -20,10 +23,8 @@ export default function Home() {
     handleResize();
     window.addEventListener("resize", handleResize);
 
-    const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-
     // Nếu không phải mobile, điều hướng đến trang home
-    if (window.innerWidth > 768 || userId) {
+    if (window.innerWidth > 768 || user) {
       router.push("/home");
     }
 

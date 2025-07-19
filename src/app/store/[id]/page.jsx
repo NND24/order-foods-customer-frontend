@@ -1,10 +1,10 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
-import { useCart } from "@/context/CartContext";
-import { useFavorite } from "@/context/FavoriteContext";
+import { useCart } from "@/context/cartContext";
+import { useFavorite } from "@/context/favoriteContext";
 import ListDish from "@/components/dish/ListDish";
 import Header from "@/components/header/Header";
 import Heading from "@/components/Heading";
@@ -12,13 +12,14 @@ import ListDishBig from "@/components/dish/ListDishBig";
 import RatingItem from "@/components/rating/RatingItem";
 import RatingBar from "@/components/rating/RatingBar";
 import MostRatingSlider from "@/components/rating/MostRatingSlider";
-import { useSocket } from "@/context/SocketContext";
+import { useSocket } from "@/context/socketContext";
 import { useEffect, useState } from "react";
 import { storeService } from "@/api/storeService";
 import { dishService } from "@/api/dishService";
 import { favoriteService } from "@/api/favoriteService";
 import { ratingService } from "@/api/ratingService";
 import { toast } from "react-toastify";
+import { useAuth } from "@/context/authContext";
 
 const page = () => {
   const { id: storeId } = useParams();
@@ -38,8 +39,7 @@ const page = () => {
   const { notifications } = useSocket();
   const { cart, refreshCart } = useCart();
   const { favorite, refreshFavorite } = useFavorite();
-
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const { user } = useAuth();
 
   const getStoreInfo = async () => {
     try {
@@ -128,14 +128,6 @@ const page = () => {
     }
   }, [allStoreRating]);
 
-  useEffect(() => {
-    const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-    if (userId) {
-      refreshCart();
-      refreshFavorite();
-    }
-  }, []);
-
   const calculateCartPrice = () => {
     const { totalPrice, totalQuantity } = storeCart.items.reduce(
       (acc, item) => {
@@ -217,7 +209,7 @@ const page = () => {
             <Link href='/home'>
               <Image src='/assets/arrow_left_white.png' alt='' width={30} height={30} />
             </Link>
-            {userId && (
+            {user && (
               <div className='relative flex items-center gap-[20px]'>
                 <Image
                   src={`/assets/favorite${storeFavorite ? "-active" : "_white"}.png`}
@@ -302,7 +294,7 @@ const page = () => {
                   )}
                 </div>
 
-                {userId && (
+                {user && (
                   <div className='hidden md:block'>
                     <div
                       className='flex items-center gap-[5px] p-[6px] cursor-pointer'
@@ -368,7 +360,7 @@ const page = () => {
                           <RatingItem
                             key={rating._id}
                             rating={rating}
-                            userId={userId}
+                            userId={user._id}
                             refetchAllStoreRating={getAllStoreRating}
                             refetchPaginationRating={getPaginationRating}
                             refetchAllStoreRatingDesc={getAllStoreRatingDesc}

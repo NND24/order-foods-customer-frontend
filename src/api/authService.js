@@ -1,5 +1,4 @@
 import { config, instance } from "../utils/axiosConfig";
-import { toast } from "react-toastify";
 
 const register = async (userData) => {
   const response = await instance.post(`/auth/register`, userData);
@@ -66,7 +65,7 @@ const changePassword = async (data) => {
 };
 
 const resetPassword = async (data) => {
-  const response = await instance.put(`/auth/reset-password`, data, config);
+  const response = await instance.put(`/auth/reset-password`, data, config());
   if (response.data) {
     return response.data;
   }

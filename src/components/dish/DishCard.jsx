@@ -4,15 +4,15 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cartContext";
 import { cartService } from "@/api/cartService";
+import { useAuth } from "@/context/authContext";
 
 const DishCard = ({ dish, storeInfo, cartItems }) => {
   const router = useRouter();
   const [cartItem, setCartItem] = useState(null);
 
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-
+  const { user } = useAuth();
   const { refreshCart } = useCart();
 
   useEffect(() => {
@@ -22,20 +22,20 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
   }, [cartItems]);
 
   const handleChangeQuantity = async (amount) => {
-    if (storeInfo?.data?.openStatus === "CLOSED") {
+    if (storeInfo?.openStatus === "CLOSED") {
       toast.warn("Món ăn đã hết hàng. Vui lòng chọn món khác.");
       return;
     }
 
-    if (userId) {
+    if (user) {
       if (dish.toppingGroups.length > 0) {
-        router.push(`/store/${storeInfo?.data?._id}/dish/${dish._id}`);
+        router.push(`/store/${storeInfo?._id}/dish/${dish._id}`);
       } else {
         try {
           const currentQuantity = cartItem?.quantity || 0;
           const newQuantity = Math.max(currentQuantity + amount, 0);
 
-          cartService.updateCart({ storeId: storeInfo?.data?._id, dishId: dish._id, quantity: newQuantity });
+          await cartService.updateCart({ storeId: storeInfo?._id, dishId: dish._id, quantity: newQuantity });
 
           refreshCart();
           toast.success("Cập nhật giỏ hàng thành công");
@@ -50,7 +50,7 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
 
   return (
     <div className='relative'>
-      {storeInfo?.data?.openStatus === "CLOSED" ? (
+      {storeInfo?.openStatus === "CLOSED" ? (
         <div className='absolute inset-0 bg-[#00000080] z-20 flex items-center justify-center rounded-[8px] cursor-not-allowed'>
           <span className='text-white text-[16px] font-semibold'>Cửa hàng hiện đang đóng</span>
         </div>
@@ -66,7 +66,7 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
         name='storeCard'
         href={`/store/${dish.store}/dish/${dish._id}`}
         className={`relative flex gap-[15px] items-start pb-[15px] md:shadow-[rgba(0,0,0,0.24)_0px_3px_8px] md:border md:border-[#a3a3a3a3] md:border-solid md:rounded-[8px] md:p-[10px] ${
-          storeInfo?.data?.openStatus === "CLOSED" ? "pointer-events-none" : ""
+          storeInfo?.openStatus === "CLOSED" ? "pointer-events-none" : ""
         }`}
         style={{ borderBottom: "1px solid #a3a3a3a3" }}
       >

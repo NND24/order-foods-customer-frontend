@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { favoriteService } from "@/api/favoriteService";
+import { useAuth } from "./authContext";
 
 const favoriteContext = createContext();
 
@@ -8,16 +9,17 @@ export const FavoriteProvider = ({ children }) => {
   const [favorite, setFavorite] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const { user } = useAuth();
 
   const refreshFavorite = async () => {
     try {
-      if (userId) {
+      if (user) {
         setLoading(true);
         const response = await favoriteService.getUserFavorite();
         setFavorite(response.data);
       }
     } catch (error) {
+      setFavorite(null);
       console.error("Lỗi khi lấy giỏ hàng:", error);
     } finally {
       setLoading(false);
@@ -26,7 +28,7 @@ export const FavoriteProvider = ({ children }) => {
 
   useEffect(() => {
     refreshFavorite();
-  }, []);
+  }, [user]);
 
   return <favoriteContext.Provider value={{ favorite, loading, refreshFavorite }}>{children}</favoriteContext.Provider>;
 };

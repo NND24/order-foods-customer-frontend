@@ -1,6 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { cartService } from "@/api/cartService";
+import { useAuth } from "./authContext";
 
 const CartContext = createContext();
 
@@ -8,16 +9,17 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+  const { user } = useAuth();
 
   const refreshCart = async () => {
     try {
-      if (userId) {
+      if (user) {
         setLoading(true);
         const response = await cartService.getUserCart();
         setCart(response.data);
       }
     } catch (error) {
+      setCart(null);
       console.error("Lỗi khi lấy giỏ hàng:", error);
     } finally {
       setLoading(false);
@@ -26,7 +28,7 @@ export const CartProvider = ({ children }) => {
 
   useEffect(() => {
     refreshCart();
-  }, []);
+  }, [user]);
 
   return <CartContext.Provider value={{ cart, loading, refreshCart }}>{children}</CartContext.Provider>;
 };

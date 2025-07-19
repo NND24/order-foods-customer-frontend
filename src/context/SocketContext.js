@@ -1,6 +1,7 @@
 "use client";
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
+import { useAuth } from "./authContext";
 
 const ENDPOINT = "http://localhost:5000" || "";
 const SocketContext = createContext();
@@ -8,16 +9,17 @@ const SocketContext = createContext();
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const [notifications, setNotifications] = useState([]);
-  const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+
+  const { user } = useAuth();
 
   useEffect(() => {
-    if (!userId) return;
+    if (!user) return;
 
     const newSocket = io(ENDPOINT, { transports: ["websocket"] });
     setSocket(newSocket);
 
     // Đăng ký userId với server
-    newSocket.emit("registerUser", userId);
+    newSocket.emit("registerUser", user._id);
 
     // Nhận danh sách thông báo cũ khi kết nối
     newSocket.on("getAllNotifications", (allNotifications) => {
