@@ -57,15 +57,15 @@ const checkOTP = async (data) => {
   }
 };
 
-const changePassword = async (data) => {
-  const response = await instance.put(`/auth/change-password`, data);
+const resetPassword = async (data) => {
+  const response = await instance.put(`/auth/reset-password`, data);
   if (response.data) {
     return response.data;
   }
 };
 
-const resetPassword = async (data) => {
-  const response = await instance.put(`/auth/reset-password`, data, config());
+const changePassword = async (data) => {
+  const response = await instance.put(`/auth/change-password`, data, config());
   if (response.data) {
     return response.data;
   }

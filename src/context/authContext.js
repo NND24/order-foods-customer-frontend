@@ -29,22 +29,10 @@ export const AuthProvider = ({ children }) => {
       setUserId(parsedId);
       fetchUser(parsedId);
     } else {
+      setUser(null);
       setLoading(false);
     }
-
-    const handleStorageChange = () => {
-      const id = localStorage.getItem("userId");
-      setUserId(id);
-      if (id) {
-        fetchUser(id);
-      } else {
-        setUser(null);
-      }
-    };
-
-    window.addEventListener("storage", handleStorageChange);
-    return () => window.removeEventListener("storage", handleStorageChange);
-  }, []);
+  }, [userId]);
 
   return <AuthContext.Provider value={{ userId, setUserId, user, setUser, loading }}>{children}</AuthContext.Provider>;
 };

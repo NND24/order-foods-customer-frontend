@@ -95,30 +95,6 @@ const MobileHeader = ({ page }) => {
                 Thông báo
               </p>
             </Link>
-
-            <Link href='/carts' className='relative group flex flex-col items-center gap-[1px]'>
-              <Image
-                src='/assets/cart.png'
-                alt=''
-                width={24}
-                height={24}
-                className={`group-hover:hidden  ${page == "carts" ? "!hidden" : ""}`}
-              />
-              <Image
-                src='/assets/cart_active.png'
-                alt=''
-                width={24}
-                height={24}
-                className={`hidden group-hover:block ${page == "carts" ? "!block" : ""}`}
-              />
-              <p
-                className={`text-[12px] group-hover:text-[#fc6011] ${
-                  page == "carts" ? "text-[#fc6011]" : "text-[#4A4B4D]"
-                }`}
-              >
-                Giỏ hàng
-              </p>
-            </Link>
           </>
         )}
       </div>

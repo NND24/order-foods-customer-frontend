@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import NavBar from "@/components/header/NavBar";
@@ -11,9 +11,16 @@ import ListStore from "@/components/store/ListStore";
 import StoreBigSlider from "@/components/store/StoreBigSlider";
 import { useStoreSearch } from "@/hooks/useStoreSearch";
 import { Atom } from "react-loading-indicators";
+import { useAuth } from "@/context/authContext";
 
 const page = () => {
   const { allStore, ratingStore, standoutStore, loading: storeLoading } = useStoreSearch();
+  const { setUserId } = useAuth();
+
+  useEffect(() => {
+    const userId = JSON.parse(localStorage.getItem("userId"));
+    setUserId(userId);
+  }, []);
 
   if (storeLoading) {
     return (

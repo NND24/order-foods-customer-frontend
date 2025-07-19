@@ -34,38 +34,32 @@ const NavBar = ({ page }) => {
       ) : (
         <div className='relative flex items-center justify-between h-full w-full md:justify-normal md:gap-[20px]'>
           <div className='flex items-center gap-[20px]'>
-            <Link
-              href='/notifications'
-              className='relative group flex flex-col items-center gap-[1px]'
-              id='notificationUrl'
-            >
+            <Link href='/carts' className='relative group flex flex-col items-center gap-[1px]'>
               <Image
-                src='/assets/notification.png'
+                src='/assets/cart.png'
                 alt=''
                 width={24}
                 height={24}
-                className={`group-hover:hidden  ${page == "notifications" ? "!hidden" : ""}`}
+                className={`group-hover:hidden  ${page == "carts" ? "!hidden" : ""}`}
               />
               <Image
-                src='/assets/notification_active.png'
+                src='/assets/cart_active.png'
                 alt=''
                 width={24}
                 height={24}
-                className={`hidden group-hover:block ${page == "notifications" ? "!block" : ""}`}
+                className={`hidden group-hover:block ${page == "carts" ? "!block" : ""}`}
               />
               <p
                 className={`text-[12px] group-hover:text-[#fc6011] ${
-                  page == "notifications" ? "text-[#fc6011]" : "text-[#4A4B4D]"
+                  page == "carts" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                 }`}
               >
-                Thông báo
+                Giỏ hàng
               </p>
 
-              {notifications.filter((noti) => noti.status === "unread").length > 0 && (
+              {cart && cart.length > 0 && (
                 <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
-                  <span className='text-[11px] text-white'>
-                    {notifications.filter((noti) => noti.status === "unread").length}
-                  </span>
+                  <span className='text-[11px] text-white'>{cart.length}</span>
                 </div>
               )}
             </Link>
@@ -108,32 +102,38 @@ const NavBar = ({ page }) => {
           </Link>
           <div className='flex items-center gap-[20px]'>
             <div className='hidden md:block'>
-              <Link href='/carts' className='relative group flex flex-col items-center gap-[1px]'>
+              <Link
+                href='/notifications'
+                className='relative group flex flex-col items-center gap-[1px]'
+                id='notificationUrl'
+              >
                 <Image
-                  src='/assets/cart.png'
+                  src='/assets/notification.png'
                   alt=''
                   width={24}
                   height={24}
-                  className={`group-hover:hidden  ${page == "carts" ? "!hidden" : ""}`}
+                  className={`group-hover:hidden  ${page == "notifications" ? "!hidden" : ""}`}
                 />
                 <Image
-                  src='/assets/cart_active.png'
+                  src='/assets/notification_active.png'
                   alt=''
                   width={24}
                   height={24}
-                  className={`hidden group-hover:block ${page == "carts" ? "!block" : ""}`}
+                  className={`hidden group-hover:block ${page == "notifications" ? "!block" : ""}`}
                 />
                 <p
                   className={`text-[12px] group-hover:text-[#fc6011] ${
-                    page == "carts" ? "text-[#fc6011]" : "text-[#4A4B4D]"
+                    page == "notifications" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                   }`}
                 >
-                  Giỏ hàng
+                  Thông báo
                 </p>
 
-                {cart && cart.length > 0 && (
+                {notifications.filter((noti) => noti.status === "unread").length > 0 && (
                   <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
-                    <span className='text-[11px] text-white'>{cart.length}</span>
+                    <span className='text-[11px] text-white'>
+                      {notifications.filter((noti) => noti.status === "unread").length}
+                    </span>
                   </div>
                 )}
               </Link>
