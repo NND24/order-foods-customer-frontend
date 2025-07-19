@@ -22,7 +22,7 @@ const updateCart = async (data) => {
 };
 
 const completeCart = async (data) => {
-  const response = await instance.delete(`/cart/complete`, data, config());
+  const response = await instance.post(`/cart/complete`, data, config());
   if (response.data) {
     return response.data;
   }

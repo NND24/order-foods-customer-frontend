@@ -44,7 +44,7 @@ const Header = ({ page }) => {
       <div className='w-[90%] mx-auto hidden md:block'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center gap-[30px] md:w-[45%] lg:w-[40%]'>
-            <Link href='/home' className='relative w-[60px] pt-[60px] h-[60px]'>
+            <Link href='/home' className='relative w-[50px] pt-[50px] h-[50px]'>
               <Image src='/assets/logo_app.png' layout='fill' objectFit='contain' alt='' />
             </Link>
 

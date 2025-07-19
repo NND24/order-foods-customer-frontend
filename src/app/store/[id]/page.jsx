@@ -20,6 +20,24 @@ import { favoriteService } from "@/api/favoriteService";
 import { ratingService } from "@/api/ratingService";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/authContext";
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconUrl: markerIcon,
+  iconRetinaUrl: markerIcon2x,
+  shadowUrl: markerShadow,
+});
+
+const homeIcon = new L.Icon({
+  iconUrl: "https://cdn-icons-png.flaticon.com/128/1689/1689246.png",
+  iconSize: [40, 40],
+});
 
 const page = () => {
   const { id: storeId } = useParams();
@@ -246,7 +264,7 @@ const page = () => {
             </div>
 
             <div className='flex gap-[20px] my-[20px] mx-[20px] items-start bg-[#fff] translate-y-[-60%] mb-[-10%] p-[10px] rounded-[6px] shadow-[rgba(0,0,0,0.24)_0px_3px_8px]'>
-              <div className='relative w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] rounded-[8px] overflow-hidden'>
+              <div className='relative w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] rounded-[8px] overflow-hidden'>
                 <Image
                   src={storeInfo?.avatar?.url || "/assets/logo_app.png"}
                   alt=''
@@ -288,10 +306,6 @@ const page = () => {
                   {storeInfo?.description && (
                     <span className='text-[#636464] pt-[4px] line-clamp-1'>{storeInfo?.description}</span>
                   )}
-
-                  {storeInfo?.address && (
-                    <span className='text-[#636464] pt-[4px] line-clamp-1'>{storeInfo?.address.full_address}</span>
-                  )}
                 </div>
 
                 {user && (
@@ -327,6 +341,23 @@ const page = () => {
                   <ListDish storeInfo={storeInfo} allDish={allDish} cartItems={storeCart ? storeCart?.items : []} />
                 </div>
               )}
+
+              <div className='w-full h-[150px] my-4 relative z-0 rounded-[10px] overflow-hidden'>
+                {typeof window !== "undefined" && storeInfo?.address && storeInfo?.address.lat && (
+                  <MapContainer
+                    key={`${storeInfo.address.lat}-${storeInfo.address.lon}`}
+                    center={[storeInfo.address.lat, storeInfo.address.lon]}
+                    zoom='12'
+                    style={{ width: "100%", height: "100%" }}
+                  >
+                    <TileLayer url='https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png' />
+
+                    <Marker position={[storeInfo.address.lat, storeInfo.address.lon]} icon={homeIcon}>
+                      <Popup>{storeInfo?.address.full_address || "Cửa hàng"}</Popup>
+                    </Marker>
+                  </MapContainer>
+                )}
+              </div>
 
               {allStoreRating &&
                 allStoreRatingDesc &&
