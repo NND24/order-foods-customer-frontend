@@ -18,6 +18,10 @@ export const SocketProvider = ({ children }) => {
     const newSocket = io(ENDPOINT, { transports: ["websocket"] });
     setSocket(newSocket);
 
+    newSocket.on("connect", () => {
+      console.log("Socket connected:", newSocket.id); // ID của socket
+    });
+
     // Đăng ký userId với server
     newSocket.emit("registerUser", user._id);
 
@@ -34,7 +38,7 @@ export const SocketProvider = ({ children }) => {
     return () => {
       newSocket.disconnect();
     };
-  }, []);
+  }, [user]);
 
   return (
     <SocketContext.Provider value={{ socket, notifications, setNotifications }}>{children}</SocketContext.Provider>

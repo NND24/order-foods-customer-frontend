@@ -8,7 +8,7 @@ const getAllNotifications = async () => {
 };
 
 const updateNotificationStatus = async (id) => {
-  const response = await instance.get(`/notification/update-notification/${id}`, config());
+  const response = await instance.put(`/notification/update-notification/${id}`, null, config());
   if (response.data) {
     return response.data;
   }
