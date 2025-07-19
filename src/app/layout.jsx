@@ -11,6 +11,8 @@ import { FavoriteProvider } from "@/context/favoriteContext";
 import { SocketProvider } from "@/context/socketContext";
 import { AuthProvider, useAuth } from "@/context/authContext";
 import { Atom } from "react-loading-indicators";
+import { StoreLocationProvider } from "@/context/storeLocationContext";
+import { LocationProvider } from "@/context/locationContext";
 
 function AppProviders({ children }) {
   const { loading: authLoading } = useAuth();
@@ -34,29 +36,33 @@ export default function RootLayout({ children }) {
           <ForgotPassEmailProvider>
             <AuthProvider>
               <SocketProvider>
-                <ProvinceProvider>
-                  <CartProvider>
-                    <OrderProvider>
-                      <FavoriteProvider>
-                        <AppProviders>
-                          {children}
-                          <ToastContainer
-                            position='top-right'
-                            autoClose={5000}
-                            hideProgressBar={false}
-                            newestOnTop={false}
-                            closeOnClick
-                            rtl={false}
-                            pauseOnFocusLoss
-                            draggable
-                            pauseOnHover
-                            theme='light'
-                          />
-                        </AppProviders>
-                      </FavoriteProvider>
-                    </OrderProvider>
-                  </CartProvider>
-                </ProvinceProvider>
+                <StoreLocationProvider>
+                  <LocationProvider>
+                    <ProvinceProvider>
+                      <CartProvider>
+                        <OrderProvider>
+                          <FavoriteProvider>
+                            <AppProviders>
+                              {children}
+                              <ToastContainer
+                                position='top-right'
+                                autoClose={5000}
+                                hideProgressBar={false}
+                                newestOnTop={false}
+                                closeOnClick
+                                rtl={false}
+                                pauseOnFocusLoss
+                                draggable
+                                pauseOnHover
+                                theme='light'
+                              />
+                            </AppProviders>
+                          </FavoriteProvider>
+                        </OrderProvider>
+                      </CartProvider>
+                    </ProvinceProvider>
+                  </LocationProvider>
+                </StoreLocationProvider>
               </SocketProvider>
             </AuthProvider>
           </ForgotPassEmailProvider>

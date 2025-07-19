@@ -1,7 +1,7 @@
-import { config, instance } from "../utils/axiosConfig";
+import { config, instance } from "@/utils/axiosConfig";
 
-const getLocation = async () => {
-  const response = await instance.get(`/location/`, config());
+const getLocationDetail = async (id) => {
+  const response = await instance.get(`/location/get-location/${id}`, config());
   if (response.data) {
     return response.data;
   }
@@ -21,6 +21,13 @@ const addLocation = async (data) => {
   }
 };
 
+const updateLocation = async ({ id, data }) => {
+  const response = await instance.put(`/location/update-location/${id}`, data, config());
+  if (response.data) {
+    return response.data;
+  }
+};
+
 const deleteLocation = async (id) => {
   const response = await instance.delete(`/location/delete-location/${id}`, config());
   if (response.data) {
@@ -29,8 +36,9 @@ const deleteLocation = async (id) => {
 };
 
 export const locationService = {
-  getLocation,
+  getLocationDetail,
   getUserLocations,
   addLocation,
+  updateLocation,
   deleteLocation,
 };
