@@ -64,7 +64,7 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
 
       <Link
         name='storeCard'
-        href={`/store/${dish.store}/dish/${dish._id}`}
+        href={`/store/${dish.storeId}/dish/${dish._id}`}
         className={`relative flex gap-[15px] items-start pb-[15px] md:shadow-[rgba(0,0,0,0.24)_0px_3px_8px] md:border md:border-[#a3a3a3a3] md:border-solid md:rounded-[8px] md:p-[10px] ${
           storeInfo?.openStatus === "CLOSED" ? "pointer-events-none" : ""
         }`}

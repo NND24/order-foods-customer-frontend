@@ -64,7 +64,7 @@ const DishBigCard = ({ dish, storeInfo, cartItems }) => {
       ) : null}
 
       <Link
-        href={`/store/${dish.store}/dish/${dish._id}`}
+        href={`/store/${dish.storeId}/dish/${dish._id}`}
         className={`${storeInfo?.openStatus === "CLOSED" ? "pointer-events-none" : ""}`}
       >
         <div className='relative flex flex-col gap-[4px] pt-[75%] w-full' name='bigDishCard'>
