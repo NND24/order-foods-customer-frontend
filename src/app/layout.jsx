@@ -13,6 +13,7 @@ import { AuthProvider, useAuth } from "@/context/authContext";
 import { Atom } from "react-loading-indicators";
 import { StoreLocationProvider } from "@/context/storeLocationContext";
 import { LocationProvider } from "@/context/locationContext";
+import { VoucherProvider } from "@/context/voucherContext";
 
 function AppProviders({ children }) {
   const { loading: authLoading } = useAuth();
@@ -42,21 +43,23 @@ export default function RootLayout({ children }) {
                       <CartProvider>
                         <OrderProvider>
                           <FavoriteProvider>
-                            <AppProviders>
-                              {children}
-                              <ToastContainer
-                                position='top-right'
-                                autoClose={5000}
-                                hideProgressBar={false}
-                                newestOnTop={false}
-                                closeOnClick
-                                rtl={false}
-                                pauseOnFocusLoss
-                                draggable
-                                pauseOnHover
-                                theme='light'
-                              />
-                            </AppProviders>
+                            <VoucherProvider>
+                              <AppProviders>
+                                {children}
+                                <ToastContainer
+                                  position='top-right'
+                                  autoClose={5000}
+                                  hideProgressBar={false}
+                                  newestOnTop={false}
+                                  closeOnClick
+                                  rtl={false}
+                                  pauseOnFocusLoss
+                                  draggable
+                                  pauseOnHover
+                                  theme='light'
+                                />
+                              </AppProviders>
+                            </VoucherProvider>
                           </FavoriteProvider>
                         </OrderProvider>
                       </CartProvider>

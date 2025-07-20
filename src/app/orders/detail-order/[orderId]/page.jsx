@@ -285,12 +285,39 @@ const Page = () => {
                   </div>
                 </div>
 
+                <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+                <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                  <span className='text-[#4A4B4D] text-[18px] font-bold'>Ưu đãi</span>
+
+                  {/* Hiển thị danh sách voucher đã chọn */}
+                  {orderDetail.vouchers.length > 0 ? (
+                    <div className='mt-3 flex flex-col gap-2'>
+                      {orderDetail.vouchers.map((voucher) => (
+                        <div
+                          key={voucher._id}
+                          className='flex items-center justify-between p-3 rounded-lg border border-[#fc6011] bg-[#fff5f0]'
+                        >
+                          <span className='text-[#4A4B4D] font-medium'>{voucher.voucherId.code}</span>
+                          <span className='text-sm text-gray-500'>{voucher.voucherId.description}</span>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className='mt-3 text-sm text-gray-400'>Chưa có ưu đãi nào được chọn</p>
+                  )}
+                </div>
+
                 {/* Divider */}
                 <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
 
                 {/* Order Summary */}
                 <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
-                  <OrderSummary detailItems={orderDetail?.items} price={orderDetail?.finalTotal} />
+                  <OrderSummary
+                    detailItems={orderDetail?.items}
+                    subtotalPrice={orderDetail?.subtotalPrice}
+                    totalDiscount={orderDetail?.totalDiscount}
+                  />
                 </div>
 
                 {/* Action Buttons */}

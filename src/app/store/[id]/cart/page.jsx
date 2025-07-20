@@ -13,6 +13,7 @@ import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
 import { useCart } from "@/context/cartContext";
 import { useOrder } from "@/context/orderContext";
+import { useVoucher } from "@/context/voucherContext";
 
 const page = () => {
   const router = useRouter();
@@ -20,13 +21,17 @@ const page = () => {
 
   const { storeLocation, setStoreLocation, storeId: storeLocationId, setStoreId } = useStoreLocation();
 
-  const [cartPrice, setCartPrice] = useState(0);
   const [detailCart, setDetailCart] = useState(null);
   const [storeCart, setStoreCart] = useState(null);
+  const [subtotalPrice, setSubtotalPrice] = useState(0);
+  const [totalDiscount, setTotalDiscount] = useState(0);
 
   const { user } = useAuth();
   const { refreshCart, cart } = useCart();
   const { refreshOrder } = useOrder();
+  const { storeVouchers } = useVoucher();
+
+  const selectedVouchers = storeVouchers[storeId] || [];
 
   useEffect(() => {
     if (cart) {
@@ -103,22 +108,22 @@ const page = () => {
   }, []);
 
   const calculateCartPrice = () => {
-    const { totalPrice, totalQuantity } = detailCart?.items.reduce(
+    const { subtotalPrice } = detailCart?.items.reduce(
       (acc, item) => {
         const dishPrice = (item.dish?.price || 0) * item.quantity;
         const toppingsPrice =
           (Array.isArray(item.toppings) ? item.toppings.reduce((sum, topping) => sum + (topping.price || 0), 0) : 0) *
           item.quantity;
 
-        acc.totalPrice += dishPrice + toppingsPrice;
+        acc.subtotalPrice += dishPrice + toppingsPrice;
         acc.totalQuantity += item.quantity;
 
         return acc;
       },
-      { totalPrice: 0, totalQuantity: 0 }
+      { subtotalPrice: 0, totalQuantity: 0 }
     );
 
-    setCartPrice(totalPrice);
+    setSubtotalPrice(subtotalPrice);
   };
 
   const handleCompleteCart = async () => {
@@ -131,7 +136,7 @@ const page = () => {
       console.log("item.dish.stockStatus: ", item.dish.stockStatus);
       return item.dish.stockStatus === "OUT_OF_STOCK";
     });
-    console.log("outOfStockItems: ", outOfStockItems);
+
     if (outOfStockItems.length > 0) {
       toast.error("Có món ăn hiện đang hết hàng, không thể đặt hàng. Vui lòng quay lại sau!");
       return;
@@ -154,6 +159,7 @@ const page = () => {
           detailAddress: storeLocation.detailAddress,
           note: storeLocation.note,
           location: [storeLocation.lon, storeLocation.lat],
+          vouchers: selectedVouchers,
         });
 
         toast.success("Đặt thành công");
@@ -189,6 +195,35 @@ const page = () => {
       }
     }
   }, [storeLocation, detailCart]);
+
+  useEffect(() => {
+    setTotalDiscount(calculateTotalDiscount());
+  }, [selectedVouchers, subtotalPrice, detailCart]);
+
+  const calculateTotalDiscount = () => {
+    if (!detailCart || !selectedVouchers || selectedVouchers.length === 0) return 0;
+
+    let totalDiscount = 0;
+    const orderPrice = subtotalPrice;
+
+    selectedVouchers.forEach((voucher) => {
+      if (voucher.minOrderAmount && orderPrice < voucher.minOrderAmount) return;
+
+      let discount = 0;
+      if (voucher.discountType === "PERCENTAGE") {
+        discount = (orderPrice * voucher.discountValue) / 100;
+        if (voucher.maxDiscount) {
+          discount = Math.min(discount, voucher.maxDiscount);
+        }
+      } else if (voucher.discountType === "FIXED") {
+        discount = voucher.discountValue;
+      }
+
+      totalDiscount += discount;
+    });
+
+    return Math.min(totalDiscount, orderPrice);
+  };
 
   return (
     <>
@@ -255,12 +290,6 @@ const page = () => {
               <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
 
               <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
-                <OrderSummary detailItems={detailCart?.items} price={cartPrice} />
-              </div>
-
-              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
-
-              <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
                 <div className='pb-[15px] flex items-center justify-between'>
                   <span className='text-[#4A4B4D] text-[18px] font-bold'>Thông tin thanh toán</span>
                 </div>
@@ -302,7 +331,25 @@ const page = () => {
               <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
                 <span className='text-[#4A4B4D] text-[18px] font-bold'>Ưu đãi</span>
 
-                <Link href={`/store/${storeId}/coupons`} className='flex gap-[15px] mb-[10px] mt-[20px]'>
+                {/* Hiển thị danh sách voucher đã chọn */}
+                {selectedVouchers.length > 0 ? (
+                  <div className='mt-3 flex flex-col gap-2'>
+                    {selectedVouchers.map((voucher) => (
+                      <div
+                        key={voucher._id}
+                        className='flex items-center justify-between p-3 rounded-lg border border-[#fc6011] bg-[#fff5f0]'
+                      >
+                        <span className='text-[#4A4B4D] font-medium'>{voucher.code}</span>
+                        <span className='text-sm text-gray-500'>{voucher.description}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className='mt-3 text-sm text-gray-400'>Chưa có ưu đãi nào được chọn</p>
+                )}
+
+                {/* Link sang trang chọn voucher */}
+                <Link href={`/store/${storeId}/vouchers`} className='flex gap-[15px] mb-[10px] mt-[20px]'>
                   <div className='relative w-[30px] pt-[30px]'>
                     <Image src='/assets/marketing.png' alt='' layout='fill' objectFit='contain' />
                   </div>
@@ -313,6 +360,16 @@ const page = () => {
                     </div>
                   </div>
                 </Link>
+              </div>
+
+              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+              <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <OrderSummary
+                  detailItems={detailCart?.items}
+                  subtotalPrice={subtotalPrice}
+                  totalDiscount={totalDiscount}
+                />
               </div>
 
               <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
@@ -329,7 +386,7 @@ const page = () => {
             <div className='flex items-center justify-between pb-[8px] lg:w-[60%] md:w-[80%] md:mx-auto'>
               <span className='text-[#000] text-[18px]'>Tổng cộng</span>
               <span className='text-[#4A4B4D] text-[24px] font-semibold'>
-                {Number(cartPrice.toFixed(0)).toLocaleString("vi-VN")}đ
+                {Number((subtotalPrice - totalDiscount).toFixed(0)).toLocaleString("vi-VN")}đ
               </span>
             </div>
             <div

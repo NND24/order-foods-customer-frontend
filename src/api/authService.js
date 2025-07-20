@@ -1,4 +1,4 @@
-import { config, instance } from "../utils/axiosConfig";
+import { config, instance } from "@/utils/axiosConfig";
 
 const register = async (userData) => {
   const response = await instance.post(`/auth/register`, userData);

@@ -1,6 +1,6 @@
 import React from "react";
 
-const OrderSummary = ({ detailItems, price }) => {
+const OrderSummary = ({ detailItems, subtotalPrice, totalDiscount }) => {
   return (
     <>
       <div className='pb-[20px] flex items-center justify-between'>
@@ -47,15 +47,27 @@ const OrderSummary = ({ detailItems, price }) => {
             );
           })}
 
-        <div className='pt-[15px]'>
-          <div className='flex items-center justify-between'>
-            <span className='text-[#4A4B4D]'>Tổng tạm tính</span>
-            <span className='text-[#4A4B4D]'>{price && Number(price.toFixed(0)).toLocaleString("vi-VN")}đ</span>
-          </div>
-          {/* <div className='flex items-center justify-between'>
-            <span className='text-[#4A4B4D]'>Phí áp dụng</span>
-            <span className='text-[#4A4B4D]'>{price && Number(price.toFixed(0)).toLocaleString("vi-VN")}đ</span>
-          </div> */}
+        <div className=''>
+          {subtotalPrice > 0 && (
+            <div className='flex items-center justify-between'>
+              <span className='text-[#4A4B4D]'>Tổng tạm tính</span>
+              <span className='text-[#4A4B4D]'>{Number(subtotalPrice.toFixed(0)).toLocaleString("vi-VN")}đ</span>
+            </div>
+          )}
+          {totalDiscount > 0 && (
+            <div className='flex items-center justify-between'>
+              <span className='text-[#4A4B4D]'>Giảm giá</span>
+              <span className='text-[#4A4B4D]'>{Number(totalDiscount.toFixed(0)).toLocaleString("vi-VN")}đ</span>
+            </div>
+          )}
+          {
+            <div className='flex items-center justify-between'>
+              <span className='text-[#4A4B4D] font-bold'>Tổng cộng</span>
+              <span className='text-[#4A4B4D]'>
+                {Number((subtotalPrice - totalDiscount).toFixed(0)).toLocaleString("vi-VN")}đ
+              </span>
+            </div>
+          }
         </div>
       </div>
     </>
