@@ -13,7 +13,7 @@ const RatingItem = ({ rating, userId, refetchAllStoreRating, refetchPaginationRa
 
   const handleDeleteRating = async () => {
     try {
-      await ratingService.deleteStoreRating(rating._id);
+      await ratingService.deleteStoreRating(rating?._id);
       refetchAllStoreRating();
       refetchPaginationRating();
       refetchAllStoreRatingDesc();
@@ -55,7 +55,7 @@ const RatingItem = ({ rating, userId, refetchAllStoreRating, refetchPaginationRa
               </div>
             </div>
 
-            {userId && rating.user._id === userId && (
+            {userId && rating.user?._id === userId && (
               <Image
                 src='/assets/dots.png'
                 className='cursor-pointer'
@@ -70,7 +70,7 @@ const RatingItem = ({ rating, userId, refetchAllStoreRating, refetchPaginationRa
             {showOptionBox && (
               <div className='absolute top-[0px] right-[35px] p-[10px] border border-[#a3a3a3a3] border-solid rounded-[6px] w-[150px] flex flex-col bg-white'>
                 <Link
-                  href={`/store/${rating.store._id}/rating/edit-rating/${rating._id}`}
+                  href={`/store/${rating.store?._id}/rating/edit-rating/${rating?._id}`}
                   className='text-[#4A4B4D] font-medium p-[6px] w-full rounded-[4px] hover:bg-[#00000011] cursor-pointer'
                 >
                   Chỉnh sửa

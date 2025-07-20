@@ -15,7 +15,7 @@ const NavBar = ({ page }) => {
   const { cart } = useCart();
 
   return (
-    <div className='fixed bottom-0 right-0 left-0 z-[99] pt-[5px] bg-[#fff] w-full h-[75px] px-[25px] shadow-[0px_-10px_40px_0px_rgba(110,110,110,0.45)] md:relative md:w-fit md:p-0 md:shadow-none'>
+    <div className='fixed bottom-0 right-0 left-0 z-[99] pt-[5px] bg-white md:bg-transparent w-full h-[75px] px-[25px] shadow-[0px_-10px_40px_0px_rgba(110,110,110,0.45)] md:relative md:w-fit md:p-0 md:shadow-none'>
       {!user ? (
         <div className='flex items-center gap-[20px] h-[75px]'>
           <Link

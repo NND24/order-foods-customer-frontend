@@ -10,6 +10,7 @@ import NavBar from "@/components/header/NavBar";
 import { useFavorite } from "@/context/favoriteContext";
 import { favoriteService } from "@/api/favoriteService";
 import FavoriteItem from "@/components/favorite/FavoriteItem";
+import { Atom } from "react-loading-indicators";
 
 const page = () => {
   const { favorite, loading, refreshFavorite } = useFavorite();
@@ -56,13 +57,11 @@ const page = () => {
                 <div className='flex items-center justify-between mb-[20px]'>
                   <h3 className='text-[#4A4B4D] text-[24px] font-bold hidden md:block'>Các cửa hàng yêu thích</h3>
                   <div
-                    className='flex items-center justify-center gap-[10px] p-[8px] rounded-[6px] bg-[#fc6011] cursor-pointer ml-auto md:ml-0 shadow-md hover:shadow-lg'
+                    className='flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] cursor-pointer shadow-md hover:shadow-xl transition-transform hover:scale-105'
                     onClick={confirmRemoveAllFavorite}
                   >
-                    <div className='relative w-[30px] pt-[30px] md:w-[24px] md:pt-[24px]'>
-                      <Image src='/assets/trash_white.png' alt='' layout='fill' objectFit='contain' />
-                    </div>
-                    <span className='text-white font-semibold text-[18px]'>Xóa hết yêu thích</span>
+                    <Image src='/assets/trash_white.png' alt='' width={20} height={20} />
+                    <span className='text-white font-semibold text-lg'>Xóa hết yêu thích</span>
                   </div>
                 </div>
 
@@ -73,11 +72,41 @@ const page = () => {
                 </div>
               </div>
             ) : (
-              <h3 className='text-[#4A4B4D] text-[24px] font-bold my-[10px]'>Yêu thích trống</h3>
+              <div className='flex flex-col items-center text-center py-10'>
+                <Image
+                  src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD17dvILSeV1lwagOw8lriHWzNb_hHikZUWA&s'
+                  alt='empty cart'
+                  width={150}
+                  height={150}
+                />
+                <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Yêu thích trống</h3>
+                <p className='text-gray-500 mt-2'>Hãy tìm cửa hàng yêu thích!</p>
+                <button
+                  onClick={() => router.push("/search")}
+                  className='mt-5 px-6 py-3 bg-[#fc6011] text-white rounded-full shadow hover:scale-105 transition-transform'
+                >
+                  Tìm kiếm ngay
+                </button>
+              </div>
             )}
           </>
         ) : (
-          <h3 className='text-[#4A4B4D] text-[24px] font-bold my-[10px]'>Đang tải...</h3>
+          <div className='flex flex-col items-center text-center py-10'>
+            <Image
+              src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD17dvILSeV1lwagOw8lriHWzNb_hHikZUWA&s'
+              alt='empty cart'
+              width={150}
+              height={150}
+            />
+            <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Yêu thích trống</h3>
+            <p className='text-gray-500 mt-2'>Hãy tìm cửa hàng yêu thích!</p>
+            <button
+              onClick={() => router.push("/search")}
+              className='mt-5 px-6 py-3 bg-[#fc6011] text-white rounded-full shadow hover:scale-105 transition-transform'
+            >
+              Tìm kiếm ngay
+            </button>
+          </div>
         )}
       </div>
 

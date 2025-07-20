@@ -1,4 +1,4 @@
-import { config, instance } from "../utils/axiosConfig";
+import { config, instance } from "@/utils/axiosConfig";
 
 const getUserOrder = async () => {
   const response = await instance.get(`/order/`, config());
@@ -15,14 +15,14 @@ const getOrderDetail = async (orderId) => {
 };
 
 const cancelOrder = async (orderId) => {
-  const response = await instance.put(`/order/${orderId}/cancel-order`, config());
+  const response = await instance.put(`/order/${orderId}/cancel-order`, null, config());
   if (response.data) {
     return response.data;
   }
 };
 
 const reOrder = async (orderId) => {
-  const response = await instance.post(`/order/re-order/${orderId}`, config());
+  const response = await instance.post(`/order/re-order/${orderId}`, null, config());
   if (response.data) {
     return response.data;
   }

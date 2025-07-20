@@ -126,23 +126,29 @@ const page = () => {
                   <SortBy />
                 </div>
 
-                <div className='rounded-md mb-6 bg-[#fff] overflow-hidden shadow-[rgba(0,0,0,0.24)_0px_3px_8px]'>
-                  <h3 className='text-[#4A4B4D] text-[20px] bg-[#e8e9e9] text-center px-4 py-3 font-semibold'>
+                <div className='rounded-xl mb-6 bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow'>
+                  <h3 className='text-[#ffffff] text-[20px] bg-gradient-to-r from-[#fc6011] to-[#ff8743] border-b border-gray-200 text-center px-4 py-3 font-semibold'>
                     Quán ăn nổi bật
                   </h3>
-                  <ul className='flex flex-col gap-[8px] p-[8px] max-h-[255px] w-full overflow-y-auto overflow-x-hidden small-scrollbar box-border'>
-                    {standoutStore?.data?.length > 0 &&
-                      standoutStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)}
+                  <ul className='flex flex-col gap-[10px] p-[10px] max-h-[280px] w-full overflow-y-auto overflow-x-hidden small-scrollbar box-border'>
+                    {standoutStore?.data?.length > 0 ? (
+                      standoutStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)
+                    ) : (
+                      <li className='text-center text-gray-500 italic py-4'>Không có dữ liệu</li>
+                    )}
                   </ul>
                 </div>
 
-                <div className='rounded-md mb-6 bg-[#fff] overflow-hidden shadow-[rgba(0,0,0,0.24)_0px_3px_8px]'>
-                  <h3 className='text-[#4A4B4D] text-[20px] bg-[#e8e9e9] text-center px-4 py-3 font-semibold'>
+                <div className='rounded-xl mb-6 bg-white overflow-hidden shadow-md hover:shadow-lg transition-shadow'>
+                  <h3 className='text-[#ffffff] text-[20px] bg-gradient-to-r from-[#fc6011] to-[#ff8743] border-b border-gray-200 text-center px-4 py-3 font-semibold'>
                     Quán ăn được đánh giá tốt
                   </h3>
-                  <ul className='flex flex-col gap-[8px] p-[8px] max-h-[255px] w-full overflow-y-auto overflow-x-hidden small-scrollbar box-border'>
-                    {ratingStore?.data?.length > 0 &&
-                      ratingStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)}
+                  <ul className='flex flex-col gap-[10px] p-[10px] max-h-[280px] w-full overflow-y-auto overflow-x-hidden small-scrollbar box-border'>
+                    {ratingStore?.data?.length > 0 ? (
+                      ratingStore.data.map((store) => <StoreSmallCard key={store._id} store={store} />)
+                    ) : (
+                      <li className='text-center text-gray-500 italic py-4'>Không có dữ liệu</li>
+                    )}
                   </ul>
                 </div>
 

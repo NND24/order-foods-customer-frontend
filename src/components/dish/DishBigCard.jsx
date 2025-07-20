@@ -10,9 +10,7 @@ import { useAuth } from "@/context/authContext";
 
 const DishBigCard = ({ dish, storeInfo, cartItems }) => {
   const router = useRouter();
-
   const [cartItem, setCartItem] = useState(null);
-
   const { user } = useAuth();
   const { refreshCart } = useCart();
 
@@ -20,7 +18,7 @@ const DishBigCard = ({ dish, storeInfo, cartItems }) => {
     if (cartItems) {
       setCartItem(cartItems.find((item) => item?.dish?._id === dish?._id));
     }
-  }, [cartItems]);
+  }, [cartItems, dish]);
 
   const handleChangeQuantity = async (amount) => {
     if (storeInfo?.openStatus === "CLOSED") {
@@ -36,7 +34,11 @@ const DishBigCard = ({ dish, storeInfo, cartItems }) => {
           const currentQuantity = cartItem?.quantity || 0;
           const newQuantity = Math.max(currentQuantity + amount, 0);
 
-          await cartService.updateCart({ storeId: storeInfo?._id, dishId: dish._id, quantity: newQuantity });
+          await cartService.updateCart({
+            storeId: storeInfo?._id,
+            dishId: dish._id,
+            quantity: newQuantity,
+          });
 
           refreshCart();
           toast.success("Cập nhật giỏ hàng thành công");
@@ -50,76 +52,68 @@ const DishBigCard = ({ dish, storeInfo, cartItems }) => {
   };
 
   return (
-    <div className='relative'>
-      {storeInfo?.openStatus === "CLOSED" ? (
-        <div className='absolute inset-0 bg-[#00000080] z-20 flex items-center justify-center rounded-[8px] cursor-not-allowed'>
-          <span className='text-white text-[16px] font-semibold'>Cửa hàng hiện đang đóng</span>
-        </div>
-      ) : dish?.stockStatus === "OUT_OF_STOCK" ? (
-        <div className='absolute inset-0 bg-[#00000080] z-20 flex items-center justify-center rounded-[8px] cursor-not-allowed'>
-          <span className='text-white text-[16px] text-center font-semibold'>
-            Món ăn hiện không còn được phục vụ. Vui lòng chọn món khác.
+    <div className='relative group'>
+      {/* Overlay trạng thái cửa hàng */}
+      {(storeInfo?.openStatus === "CLOSED" || dish?.stockStatus === "OUT_OF_STOCK") && (
+        <div className='absolute inset-0 bg-black/50 z-20 flex items-center justify-center rounded-2xl backdrop-blur-[2px]'>
+          <span className='text-white text-lg font-semibold px-4 text-center'>
+            {storeInfo?.openStatus === "CLOSED" ? "Cửa hàng hiện đang đóng" : "Món ăn hiện không còn phục vụ"}
           </span>
         </div>
-      ) : null}
+      )}
 
+      {/* Nội dung chính */}
       <Link
         href={`/store/${dish.storeId}/dish/${dish._id}`}
-        className={`${storeInfo?.openStatus === "CLOSED" ? "pointer-events-none" : ""}`}
+        className={storeInfo?.openStatus === "CLOSED" ? "pointer-events-none" : ""}
       >
-        <div className='relative flex flex-col gap-[4px] pt-[75%] w-full' name='bigDishCard'>
+        <div
+          className='relative flex flex-col gap-2 pt-[75%] w-full rounded-2xl overflow-hidden shadow-md bg-white transition-transform duration-300 hover:scale-[1.02] hover:shadow-xl'
+          name='bigDishCard'
+        >
           <Image
             src={dish?.image?.url}
-            alt=''
+            alt={dish?.name || "Dish"}
             layout='fill'
             objectFit='cover'
-            className='rounded-[15px] justify-center'
+            className='rounded-2xl transition-transform duration-300 group-hover:scale-105'
           />
 
+          {/* Nút giỏ hàng */}
           {cartItem?.quantity > 0 ? (
-            <div className='absolute bottom-[10%] right-[5%] flex items-center justify-center bg-[#fff] gap-[4px] border border-[#fc6011] border-solid rounded-full px-[8px] py-[4px] shadow-[rgba(0,0,0,0.24)_0px_3px_8px] z-10'>
+            <div className='absolute bottom-3 right-3 flex items-center bg-white gap-2 border border-[#fc6011] rounded-full px-3 py-1 shadow-lg z-10'>
               <Image
                 src='/assets/minus.png'
-                alt=''
+                alt='minus'
                 width={20}
                 height={20}
                 onClick={(e) => {
                   e.preventDefault();
                   handleChangeQuantity(-1);
                 }}
-                className=''
+                className='cursor-pointer hover:scale-110 transition'
               />
-              <input
-                type='number'
-                value={cartItem?.quantity}
-                onClick={(e) => {
-                  e.preventDefault();
-                }}
-                readOnly
-                name=''
-                id=''
-                className='text-[#4A4B4D] text-[20px] font-bold w-[40px] text-center bg-transparent'
-              />
+              <span className='text-[#4A4B4D] text-lg font-bold w-[30px] text-center'>{cartItem?.quantity}</span>
               <Image
                 src='/assets/plus_active.png'
-                alt=''
+                alt='plus'
                 width={20}
                 height={20}
                 onClick={(e) => {
                   e.preventDefault();
                   handleChangeQuantity(1);
                 }}
-                className=''
+                className='cursor-pointer hover:scale-110 transition'
               />
             </div>
           ) : (
             <Image
               src='/assets/add_active.png'
               name='addingCart'
-              alt=''
-              width={40}
-              height={40}
-              className='absolute bottom-[10%] right-[5%] bg-[#fff] rounded-full shadow-[rgba(0,0,0,0.24)_0px_3px_8px]'
+              alt='add'
+              width={42}
+              height={42}
+              className='absolute bottom-3 right-3 bg-white rounded-full shadow-lg cursor-pointer hover:scale-110 transition'
               onClick={(e) => {
                 e.preventDefault();
                 handleChangeQuantity(1);
@@ -128,12 +122,13 @@ const DishBigCard = ({ dish, storeInfo, cartItems }) => {
           )}
         </div>
 
-        <div>
-          <h4 className='text-[#4A4B4D] text-[20px] font-medium pt-[2px] line-clamp-1' name='dishName'>
+        {/* Thông tin món ăn */}
+        <div className='mt-2'>
+          <h4 className='text-[#4A4B4D] text-lg font-semibold truncate' name='dishName'>
             {dish?.name}
           </h4>
-          {dish?.description && <p className='text-[#a4a5a8] text-[14px] line-clamp-1'>{dish?.description}</p>}
-          <p className='text-[#000] font-bold' name='dishPrice'>
+          {dish?.description && <p className='text-[#a4a5a8] text-sm truncate'>{dish?.description}</p>}
+          <p className='text-black font-bold mt-1' name='dishPrice'>
             {Number(dish?.price).toLocaleString("vi-VN")}đ
           </p>
         </div>

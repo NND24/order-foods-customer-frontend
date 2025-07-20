@@ -3,37 +3,50 @@ import Link from "next/link";
 import React from "react";
 
 const NotificationItem = ({ notification, handleNotificationStatusChange }) => {
+  const isRead = notification.status === "read";
+
   return (
     <Link
-      href={`/orders/order/${notification.orderId}`}
-      onClick={() => {
-        handleNotificationStatusChange(notification._id);
-      }}
-      className={`flex items-center gap-[20px] cursor-pointer py-[10px] px-[20px] mb-[1px] ${
-        notification.status === "read" ? "bg-[#fff]" : "bg-[#eeeeeeee]"
-      }`}
+      href={`/orders/detail-order/${notification.orderId}`}
+      onClick={() => handleNotificationStatusChange(notification._id)}
+      className={`flex items-start gap-4 p-4 mb-[2px] rounded-lg transition-all duration-200 
+        ${isRead ? "bg-white hover:bg-gray-50" : "bg-orange-50 hover:bg-orange-100"}
+      `}
     >
-      {notification.status === "read" ? (
-        <div className='w-[10px] h-[10px] rounded-full bg-[#e8e9e9]'></div>
-      ) : (
-        <div className='w-[10px] h-[10px] rounded-full bg-[#fc6011]'></div>
-      )}
+      {/* Chấm trạng thái */}
+      <div
+        className={`mt-1 w-3 h-3 rounded-full flex-shrink-0 
+          ${isRead ? "bg-gray-300" : "bg-orange-500"}
+        `}
+      />
 
-      <div className=''>
+      {/* Nội dung */}
+      <div className='flex flex-col gap-1 overflow-hidden'>
+        {/* Tiêu đề */}
         <p
-          className={`line-clamp-1 font-medium text-[16px] ${
-            notification.status === "read" ? "text-[#939393]" : "text-black"
-          }`}
+          className={`font-semibold text-base line-clamp-1 
+            ${isRead ? "text-gray-500" : "text-gray-900"}
+          `}
         >
           {notification.title}
         </p>
+
+        {/* Tin nhắn */}
         <p
-          className={`line-clamp-2 text-[14px] ${notification.status === "read" ? "text-[#939393]" : "text-[#4a4b4d]"}`}
+          className={`text-sm line-clamp-2 
+            ${isRead ? "text-gray-400" : "text-gray-700"}
+          `}
         >
           {notification.message}
         </p>
-        <p className={`text-[12px] ${notification.status === "read" ? "text-[#939393]" : "text-[#4A4B4D]"}`}>
-          {moment(notification?.createdAt).format("DD/MM/YYYY HH:mm")}
+
+        {/* Thời gian */}
+        <p
+          className={`text-xs 
+            ${isRead ? "text-gray-400" : "text-gray-500"}
+          `}
+        >
+          {moment(notification.createdAt).format("DD/MM/YYYY HH:mm")}
         </p>
       </div>
     </Link>

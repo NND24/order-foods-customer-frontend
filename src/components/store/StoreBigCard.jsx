@@ -4,46 +4,41 @@ import React from "react";
 
 const StoreBigCard = ({ store }) => {
   return (
-    <Link href={`/store/${store._id}`} data-testid='store-card'>
-      <div className='relative flex flex-col gap-[4px] min-w-[300px] pt-[45%]'>
-        <Image
-          src={store.avatar.url || ""}
-          alt=''
-          layout='fill'
-          objectFit='cover'
-          className='rounded-[6px] justify-center'
-        />
+    <Link
+      href={`/store/${store._id}`}
+      data-testid='store-card'
+      className='block bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden'
+    >
+      {/* Ảnh cửa hàng */}
+      <div className='relative w-full pt-[55%] rounded-t-2xl overflow-hidden'>
+        <Image src={store.avatar.url || "/placeholder.png"} alt={store.name} fill className='object-cover' />
+
+        {/* Overlay gradient */}
+        <div className='absolute inset-0 bg-gradient-to-t from-black/50 to-transparent' />
+
+        {/* Rating */}
+        {store.avgRating > 0 && store.amountRating > 0 && (
+          <div className='absolute left-3 bottom-2 flex items-center gap-2 bg-black/50 backdrop-blur-sm px-2 py-1 rounded-full'>
+            <div className='relative w-5 h-5 flex-shrink-0'>
+              <Image src='/assets/star_active.png' alt='rating' fill className='object-contain' />
+            </div>
+            <span className='text-orange-400 font-semibold text-sm'>{store.avgRating.toFixed(1)}</span>
+
+            <span className='text-white text-xs whitespace-nowrap'>({store.amountRating} đánh giá)</span>
+          </div>
+        )}
       </div>
 
-      <div>
-        <h4 className='text-[#4A4B4D] text-[20px] font-semibold py-[4px] line-clamp-1'>{store.name}</h4>
-
-        <div className='flex items-center gap-[6px] overflow-hidden'>
-          {/* Rating section */}
-          <div className='flex items-center gap-[4px] flex-shrink-0'>
-            {store.avgRating != 0 && (
-              <>
-                <div className='relative w-[20px] h-[20px] md:w-[15px] md:h-[15px] flex-shrink-0'>
-                  <Image src='/assets/star_active.png' alt='' layout='fill' objectFit='cover' />
-                </div>
-                <span className='text-[#fc6011]'>{store.avgRating.toFixed(2)}</span>
-              </>
-            )}
-            {store.amountRating != 0 && (
-              <span className='text-[#636464] whitespace-nowrap'>{`(${store.amountRating} đánh giá)`}</span>
-            )}
-          </div>
-
-          {store.amountRating != 0 && <div className='w-[4px] h-[4px] rounded-full bg-[#fc6011] flex-shrink-0'></div>}
-
-          <div className='flex items-center gap-[4px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'>
-            {store.storeCategory.map((category, index) => (
-              <Link href={`/search?category=${category._id}`} key={category._id} className='text-[#636464]'>
-                {category.name}
-                {index !== store.storeCategory.length - 1 && <span>, </span>}
-              </Link>
-            ))}
-          </div>
+      {/* Nội dung */}
+      <div className='p-3'>
+        <h4 className='text-gray-800 text-lg font-semibold truncate'>{store.name}</h4>
+        <div className='text-gray-600 text-sm truncate'>
+          {store.storeCategory.map((category, index) => (
+            <span key={category._id}>
+              {category.name}
+              {index !== store.storeCategory.length - 1 && <span className='text-orange-500'> • </span>}
+            </span>
+          ))}
         </div>
       </div>
     </Link>

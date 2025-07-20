@@ -25,31 +25,38 @@ const SearchBar = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
-      handleSearch();
-    }
+    if (e.key === "Enter") handleSearch();
   };
 
   return (
-    <div className='relative bg-[#e8e9e9] text-[#636464] w-full pl-[40px] pr-[20px] py-[10px] my-[15px] mb-[10px] md:my-[10px] rounded-[8px] md:py-[5px] md:m-0 md:w-[90%] lg:w-[60%]'>
-      <Image
-        src='/assets/search.png'
-        alt=''
-        width={20}
-        height={20}
-        className='absolute top-[50%] translate-y-[-50%] left-[10px]'
+    <div className='relative w-full my-3 md:my-0 md:w-[90%] lg:w-[60%]'>
+      {/* Icon Search */}
+      <button
+        className='absolute top-1/2 left-4 transform -translate-y-1/2 text-gray-400 hover:text-[#fc6011] transition'
         onClick={handleSearch}
-      />
+      >
+        <Image src='/assets/search.png' alt='search' width={22} height={22} />
+      </button>
+
+      {/* Input */}
       <input
-        type='search'
+        type='text'
         value={search}
-        name=''
-        id=''
         placeholder='Tìm kiếm quán ăn...'
-        className='bg-transparent text-[18px] w-full'
         onChange={(e) => setSearch(e.target.value)}
         onKeyDown={handleKeyDown}
+        className='w-full pl-12 pr-4 py-3 rounded-full bg-[#f3f3f3] text-gray-700 text-lg placeholder-gray-400 outline-none border border-transparent focus:border-[#fc6011] focus:bg-white focus:shadow-md transition-all'
       />
+
+      {/* Nút Xóa nhanh */}
+      {search && (
+        <button
+          className='absolute top-1/2 right-4 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition'
+          onClick={() => setSearch("")}
+        >
+          ✕
+        </button>
+      )}
     </div>
   );
 };

@@ -40,60 +40,67 @@ const CartItem = ({ cartItem }) => {
   };
 
   return (
-    <Link href={`/store/${cartItem.store._id}`} className='relative'>
-      <div className='relative flex flex-col gap-[4px] min-w-[300px] pt-[45%]'>
+    <Link
+      href={`/store/${cartItem.store._id}`}
+      className='relative block bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform duration-300 overflow-hidden'
+    >
+      {/* Ảnh cửa hàng */}
+      <div className='relative w-full pt-[55%]'>
         <Image
-          src={cartItem.store.avatar.url}
-          alt=''
-          layout='fill'
-          objectFit='cover'
-          className='rounded-[6px] justify-center'
+          src={cartItem.store.avatar.url || "/placeholder.png"}
+          alt={cartItem.store.name}
+          fill
+          className='object-cover rounded-t-2xl'
         />
       </div>
 
-      <div>
-        <div className='flex items-center justify-between gap-[10px]'>
-          <h4 className='text-[#4A4B4D] text-[20px] font-semibold py-[4px] line-clamp-1 flex-1'>
-            {cartItem.store.name}
-          </h4>
-          <p className='text-[#4A4B4D] font-medium'>{quantity} món</p>
+      {/* Nội dung */}
+      <div className='p-4'>
+        <div className='flex items-center justify-between gap-2'>
+          <h4 className='text-gray-800 text-lg font-semibold line-clamp-1 flex-1'>{cartItem.store.name}</h4>
+          <p className='text-gray-700 font-medium text-sm'>{quantity} món</p>
         </div>
 
-        <div className='flex items-center gap-[4px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'>
+        {/* Danh mục */}
+        <div className='flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-600 truncate'>
           {cartItem.store.storeCategory.map((category, index) => (
-            <Link href={`/search?category=${category._id}`} className='flex items-center gap-[4px]' key={category._id}>
-              <span className='text-[#636464]'>{category.name}</span>
-              {index !== cartItem.store.storeCategory.length - 1 && (
-                <div className='w-[4px] h-[4px] rounded-full bg-[#fc6011]'></div>
-              )}
+            <Link
+              href={`/search?category=${category._id}`}
+              key={category._id}
+              className='hover:underline hover:text-orange-500 flex items-center gap-1'
+            >
+              {category.name}
+              {index !== cartItem.store.storeCategory.length - 1 && <span className='text-orange-500'>•</span>}
             </Link>
           ))}
         </div>
 
-        <div className='flex items-center gap-[6px]'>
-          {cartItem && cartItem.store.avgRating != 0 && (
+        {/* Rating */}
+        <div className='flex items-center gap-2 mt-2'>
+          {cartItem.store.avgRating > 0 && (
             <>
-              <div className='relative w-[20px] pt-[20px] md:w-[15px] md:pt-[15px]'>
-                <Image src='/assets/star_active.png' alt='' layout='fill' objectFit='fill' />
+              <div className='relative w-4 h-4'>
+                <Image src='/assets/star_active.png' alt='rating' fill className='object-contain' />
               </div>
-              <span className='text-[#fc6011] md:text-[14px]'>{cartItem.store.avgRating.toFixed(2)}</span>
+              <span className='text-orange-500 text-sm font-medium'>{cartItem.store.avgRating.toFixed(1)}</span>
             </>
           )}
-          {cartItem.store.amountRating != 0 && (
-            <span className='text-[#636464] md:text-[14px]'>{`(${cartItem.store.amountRating} đánh giá)`}</span>
+          {cartItem.store.amountRating > 0 && (
+            <span className='text-gray-500 text-sm'>({cartItem.store.amountRating} đánh giá)</span>
           )}
         </div>
       </div>
 
+      {/* Nút xóa */}
       <div
-        className='absolute top-[10px] right-[10px] z-10 p-[8px] rounded-full bg-[#e7e7e7c4] hover:bg-[#e7e7e7e8] cursor-pointer'
+        className='absolute top-3 right-3 z-10 p-2 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer transition'
         onClick={(e) => {
           e.preventDefault();
           confirmClearCartItem();
         }}
       >
-        <div className='relative w-[30px] pt-[30px] md:w-[24px] md:pt-[24px]'>
-          <Image src='/assets/trash.png' alt='' layout='fill' objectFit='contain' />
+        <div className='relative w-6 h-6'>
+          <Image src='/assets/trash.png' alt='remove' fill className='object-contain' />
         </div>
       </div>
     </Link>

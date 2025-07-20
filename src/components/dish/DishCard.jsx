@@ -11,7 +11,6 @@ import { useAuth } from "@/context/authContext";
 const DishCard = ({ dish, storeInfo, cartItems }) => {
   const router = useRouter();
   const [cartItem, setCartItem] = useState(null);
-
   const { user } = useAuth();
   const { refreshCart } = useCart();
 
@@ -19,7 +18,7 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
     if (cartItems) {
       setCartItem(cartItems.find((item) => item?.dish?._id === dish?._id));
     }
-  }, [cartItems]);
+  }, [cartItems, dish]);
 
   const handleChangeQuantity = async (amount) => {
     if (storeInfo?.openStatus === "CLOSED") {
@@ -34,9 +33,7 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
         try {
           const currentQuantity = cartItem?.quantity || 0;
           const newQuantity = Math.max(currentQuantity + amount, 0);
-
           await cartService.updateCart({ storeId: storeInfo?._id, dishId: dish._id, quantity: newQuantity });
-
           refreshCart();
           toast.success("Cập nhật giỏ hàng thành công");
         } catch (error) {
@@ -49,85 +46,86 @@ const DishCard = ({ dish, storeInfo, cartItems }) => {
   };
 
   return (
-    <div className='relative'>
-      {storeInfo?.openStatus === "CLOSED" ? (
-        <div className='absolute inset-0 bg-[#00000080] z-20 flex items-center justify-center rounded-[8px] cursor-not-allowed'>
-          <span className='text-white text-[16px] font-semibold'>Cửa hàng hiện đang đóng</span>
-        </div>
-      ) : dish?.stockStatus === "OUT_OF_STOCK" ? (
-        <div className='absolute inset-0 bg-[#00000080] z-20 flex items-center justify-center rounded-[8px] cursor-not-allowed'>
-          <span className='text-white text-[16px] text-center font-semibold'>
-            Món ăn hiện không còn được phục vụ. Vui lòng chọn món khác.
+    <div className='relative group'>
+      {/* Overlay trạng thái */}
+      {(storeInfo?.openStatus === "CLOSED" || dish?.stockStatus === "OUT_OF_STOCK") && (
+        <div className='absolute inset-0 bg-black/50 z-20 flex items-center justify-center rounded-2xl backdrop-blur-sm'>
+          <span className='text-white text-lg font-semibold px-3 text-center'>
+            {storeInfo?.openStatus === "CLOSED" ? "Cửa hàng hiện đang đóng" : "Món ăn hiện không còn phục vụ"}
           </span>
         </div>
-      ) : null}
+      )}
 
       <Link
-        name='storeCard'
         href={`/store/${dish.storeId}/dish/${dish._id}`}
-        className={`relative flex gap-[15px] items-start pb-[15px] md:shadow-[rgba(0,0,0,0.24)_0px_3px_8px] md:border md:border-[#a3a3a3a3] md:border-solid md:rounded-[8px] md:p-[10px] ${
+        name='storeCard'
+        className={`flex gap-4 items-start p-3 rounded-2xl bg-white shadow-sm hover:shadow-xl hover:scale-[1.01] transition-transform duration-200 ${
           storeInfo?.openStatus === "CLOSED" ? "pointer-events-none" : ""
         }`}
-        style={{ borderBottom: "1px solid #a3a3a3a3" }}
       >
-        {dish?.image?.url ? (
-          <div className='relative flex flex-col gap-[4px] min-w-[90px] h-[90px] pt-[90px]'>
-            <Image src={dish.image.url} alt='' layout='fill' objectFit='cover' className='rounded-[8px]' />
+        {/* Hình ảnh món ăn */}
+        {dish?.image?.url && (
+          <div className='relative w-[100px] h-[100px] flex-shrink-0 rounded-xl overflow-hidden'>
+            <Image
+              src={dish.image.url}
+              alt={dish?.name || "Dish"}
+              layout='fill'
+              objectFit='cover'
+              className='transition-transform duration-300 group-hover:scale-105'
+            />
           </div>
-        ) : null}
+        )}
 
+        {/* Nội dung món */}
         <div className='flex flex-col flex-1'>
-          <h4 className='text-[#4A4B4D] text-[20px] font-medium pt-[2px] line-clamp-1' name='storeName'>
+          <h4 className='text-[#4A4B4D] text-lg font-semibold line-clamp-1' name='storeName'>
             {dish?.name}
           </h4>
-          {dish?.description && <p className='text-[#a4a5a8] text-[14px] line-clamp-1'>{dish?.description}</p>}
-          <div className='flex items-center justify-between'>
-            <span className='text-[#000] font-bold'>{Number(dish?.price).toLocaleString("vi-VN")}đ</span>
-            <div className='absolute bottom-[8%] right-[2%]'>
-              {cartItem?.quantity > 0 ? (
-                <div className='flex items-center justify-center bg-[#fff] gap-[4px] border border-[#fc6011] border-solid rounded-full px-[8px] py-[4px] shadow-[rgba(0,0,0,0.24)_0px_3px_8px]'>
-                  <Image
-                    src='/assets/minus.png'
-                    alt=''
-                    width={20}
-                    height={20}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleChangeQuantity(-1);
-                    }}
-                  />
-                  <input
-                    type='number'
-                    value={cartItem?.quantity}
-                    onClick={(e) => e.preventDefault()}
-                    readOnly
-                    className='text-[#4A4B4D] text-[20px] font-bold w-[40px] text-center bg-transparent'
-                  />
-                  <Image
-                    src='/assets/plus_active.png'
-                    alt=''
-                    width={20}
-                    height={20}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleChangeQuantity(1);
-                    }}
-                  />
-                </div>
-              ) : (
+          {dish?.description && <p className='text-[#a4a5a8] text-sm line-clamp-1'>{dish?.description}</p>}
+
+          <div className='flex items-center justify-between mt-2'>
+            <span className='text-black font-bold text-base'>{Number(dish?.price).toLocaleString("vi-VN")}đ</span>
+
+            {/* Nút giỏ hàng */}
+            {cartItem?.quantity > 0 ? (
+              <div className='flex items-center bg-white border border-[#fc6011] rounded-full px-2 py-1 shadow-md gap-2'>
                 <Image
-                  src='/assets/add_active.png'
-                  alt=''
-                  width={40}
-                  height={40}
-                  className='bg-[#fff] rounded-full shadow-[rgba(0,0,0,0.24)_0px_3px_8px]'
+                  src='/assets/minus.png'
+                  alt='minus'
+                  width={20}
+                  height={20}
+                  className='cursor-pointer hover:scale-110 transition'
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleChangeQuantity(-1);
+                  }}
+                />
+                <span className='text-[#4A4B4D] text-lg font-bold w-[32px] text-center'>{cartItem?.quantity}</span>
+                <Image
+                  src='/assets/plus_active.png'
+                  alt='plus'
+                  width={20}
+                  height={20}
+                  className='cursor-pointer hover:scale-110 transition'
                   onClick={(e) => {
                     e.preventDefault();
                     handleChangeQuantity(1);
                   }}
                 />
-              )}
-            </div>
+              </div>
+            ) : (
+              <Image
+                src='/assets/add_active.png'
+                alt='add'
+                width={40}
+                height={40}
+                className='bg-white rounded-full shadow-md cursor-pointer hover:scale-110 transition'
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleChangeQuantity(1);
+                }}
+              />
+            )}
           </div>
         </div>
       </Link>

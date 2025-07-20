@@ -12,6 +12,7 @@ import OrderSummary from "@/components/order/OrderSummary";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
 import { useCart } from "@/context/cartContext";
+import { useOrder } from "@/context/orderContext";
 
 const page = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const page = () => {
 
   const { user } = useAuth();
   const { refreshCart, cart } = useCart();
+  const { refreshOrder } = useOrder();
 
   useEffect(() => {
     if (cart) {
@@ -155,8 +157,9 @@ const page = () => {
         });
 
         toast.success("Đặt thành công");
+        refreshOrder();
         refreshCart();
-        router.push(`/orders/order/${orderData.order._id}`);
+        router.push(`/orders/detail-order/${orderData.order._id}`);
       } catch (error) {
         console.log(error);
       }
@@ -190,126 +193,135 @@ const page = () => {
   return (
     <>
       {detailCart && (
-        <div className='pt-[20px] pb-[140px] bg-[#fff] md:bg-[#f9f9f9] md:pt-[110px]'>
+        <div className='pt-[20px] pb-[140px] bg-[#fff] md:pt-[110px]'>
           <Heading title='Giỏ hàng' description='' keywords='' />
           <div className='hidden md:block'>
             <Header />
           </div>
 
-          <div className='bg-[#fff] lg:w-[60%] md:w-[80%] md:mx-auto md:border md:border-[#a3a3a3a3] md:border-solid md:rounded-[10px] md:shadow-[rgba(0,0,0,0.24)_0px_3px_8px] md:overflow-hidden'>
-            <div className='fixed top-0 right-0 left-0 z-10 flex items-center gap-[40px] bg-[#fff] h-[85px] px-[20px] md:static md:gap-[20px]'>
-              <Link href={`/store/${storeId}`} className='relative w-[30px] pt-[30px] md:hidden'>
-                <Image src='/assets/arrow_left_long.png' alt='' layout='fill' objectFit='contain' />
-              </Link>
-              <div className='relative w-[70px] pt-[70px] rounded-[8px] overflow-hidden hidden md:block'>
-                <Image src={detailCart?.store.avatar.url} alt='' layout='fill' objectFit='cover' />
+          <div className='lg:w-[60%] md:w-[80%] md:mx-auto'>
+            <div className='relative bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+              <div className='fixed top-0 right-0 left-0 z-10 flex items-center gap-[40px] bg-[#fff] h-[85px] p-5 md:static md:gap-[20px] border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <Link href={`/store/${storeId}`} className='relative w-[30px] pt-[30px] md:hidden'>
+                  <Image src='/assets/arrow_left_long.png' alt='' layout='fill' objectFit='contain' />
+                </Link>
+                <div className='relative w-[70px] pt-[70px] rounded-[8px] overflow-hidden hidden md:block'>
+                  <Image src={detailCart?.store.avatar.url} alt='' layout='fill' objectFit='cover' />
+                </div>
+                <div>
+                  <h3 className='text-[#4A4B4D] text-[24px] font-bold line-clamp-1'>{detailCart?.store.name}</h3>
+                  {storeLocation && storeLocation.lat !== 200 && (
+                    <p className='text-[#636464]'>
+                      Khoảng cách tới chỗ bạn{" "}
+                      {haversineDistance(
+                        [storeLocation.lat, storeLocation.lon],
+                        [detailCart?.store.address.lat, detailCart?.store.address.lon]
+                      ).toFixed(2)}
+                      km
+                    </p>
+                  )}
+                </div>
               </div>
-              <div>
-                <h3 className='text-[#4A4B4D] text-[24px] font-bold line-clamp-1'>{detailCart?.store.name}</h3>
-                {storeLocation && storeLocation.lat !== 200 && (
-                  <p className='text-[#636464]'>
-                    Khoảng cách tới chỗ bạn{" "}
-                    {haversineDistance(
-                      [storeLocation.lat, storeLocation.lon],
-                      [detailCart?.store.address.lat, detailCart?.store.address.lon]
-                    ).toFixed(2)}
-                    km
-                  </p>
-                )}
-              </div>
-            </div>
 
-            <div
-              className='p-[20px] mt-[85px] md:mt-0'
-              style={{ borderBottom: "6px solid #e0e0e0a3", borderTop: "6px solid #e0e0e0a3" }}
-            >
-              <p className='text-[#4A4B4D] text-[18px] font-bold pb-[15px]'>Giao tới</p>
+              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
 
-              <div className=' flex flex-col gap-[15px]'>
-                <Link href={`/account/location`} className='flex gap-[15px]'>
-                  <Image src='/assets/location_active.png' alt='' width={20} height={20} className='object-contain' />
-                  <div className='flex flex-1 items-center justify-between'>
-                    <div>
-                      <h3 className='text-[#4A4B4D] text-[18px] font-bold'>{storeLocation.name}</h3>
-                      <p className='text-[#a4a5a8] line-clamp-1'>
-                        {storeLocation.address || "Nhấn chọn để thêm địa chỉ giao hàng"}
-                      </p>
+              <div className='mt-[25px] md:mt-0 bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <p className='text-[#4A4B4D] text-[18px] font-bold pb-[15px]'>Giao tới</p>
+
+                <div className=' flex flex-col gap-[15px]'>
+                  <Link href={`/account/location`} className='flex gap-[15px]'>
+                    <Image src='/assets/location_active.png' alt='' width={20} height={20} className='object-contain' />
+                    <div className='flex flex-1 items-center justify-between'>
+                      <div>
+                        <h3 className='text-[#4A4B4D] text-[18px] font-bold'>{storeLocation.name}</h3>
+                        <p className='text-[#a4a5a8] line-clamp-1'>
+                          {storeLocation.address || "Nhấn chọn để thêm địa chỉ giao hàng"}
+                        </p>
+                      </div>
+                      <Image src='/assets/arrow_right.png' alt='' width={20} height={20} />
                     </div>
-                    <Image src='/assets/arrow_right.png' alt='' width={20} height={20} />
+                  </Link>
+
+                  <Link
+                    href={`/store/${storeId}/cart/edit-current-location`}
+                    className='p-[10px] rounded-[6px] flex items-center justify-between bg-[#e0e0e0a3]'
+                  >
+                    <span className='text-[#4A4B4D]'>Thêm chi tiết địa chỉ và hướng dẫn giao hàng</span>
+                    <span className='text-[#0054ff] font-semibold'>Thêm</span>
+                  </Link>
+                </div>
+              </div>
+
+              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+              <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <OrderSummary detailItems={detailCart?.items} price={cartPrice} />
+              </div>
+
+              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+              <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <div className='pb-[15px] flex items-center justify-between'>
+                  <span className='text-[#4A4B4D] text-[18px] font-bold'>Thông tin thanh toán</span>
+                </div>
+
+                {/* <div className='flex gap-[15px] mb-[10px]'>
+                  <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
+                    <Image src='/assets/credit_card.png' alt='' layout='fill' objectFit='contain' />
+                  </div>
+                  <div className='flex flex-1 items-center justify-between'>
+                    <div className='flex items-center gap-[8px]'>
+                      <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>Thẻ</h3>
+                      <span className='text-[#a4a5a8] px-[8px] py-[6px] rounded-full bg-[#e0e0e0a3] md:text-[14px] md:px-[6px]'>
+                        Đề xuất
+                      </span>
+                    </div>
+                    <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
+                      <Image src='/assets/button.png' alt='' layout='fill' objectFit='contain' />
+                    </div>
+                  </div>
+                </div> */}
+
+                <div className='flex gap-[15px]'>
+                  <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
+                    <Image src='/assets/money.png' alt='' layout='fill' objectFit='contain' />
+                  </div>
+                  <div className='flex flex-1 items-center justify-between'>
+                    <div className='flex items-center gap-[8px]'>
+                      <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>Tiền mặt</h3>
+                    </div>
+                    <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
+                      <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+              <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <span className='text-[#4A4B4D] text-[18px] font-bold'>Ưu đãi</span>
+
+                <Link href={`/store/${storeId}/coupons`} className='flex gap-[15px] mb-[10px] mt-[20px]'>
+                  <div className='relative w-[30px] pt-[30px]'>
+                    <Image src='/assets/marketing.png' alt='' layout='fill' objectFit='contain' />
+                  </div>
+                  <div className='flex flex-1 items-center justify-between'>
+                    <span className='text-[#4A4B4D] text-[18px]'>Sử dụng ưu đãi hoặc mã khuyến mãi</span>
+                    <div className='relative w-[20px] pt-[20px]'>
+                      <Image src='/assets/arrow_right.png' alt='' layout='fill' objectFit='contain' />
+                    </div>
                   </div>
                 </Link>
-
-                <Link
-                  href={`/store/${storeId}/cart/edit-current-location`}
-                  className='p-[10px] rounded-[6px] flex items-center justify-between bg-[#e0e0e0a3]'
-                >
-                  <span className='text-[#4A4B4D]'>Thêm chi tiết địa chỉ và hướng dẫn giao hàng</span>
-                  <span className='text-[#0054ff] font-semibold'>Thêm</span>
-                </Link>
-              </div>
-            </div>
-
-            <div className='p-[20px]' style={{ borderBottom: "6px solid #e0e0e0a3" }}>
-              <OrderSummary detailItems={detailCart?.items} price={cartPrice} />
-            </div>
-
-            <div className='p-[20px]' style={{ borderBottom: "6px solid #e0e0e0a3" }}>
-              <div className='pb-[15px] flex items-center justify-between'>
-                <span className='text-[#4A4B4D] text-[18px] font-bold'>Thông tin thanh toán</span>
               </div>
 
-              {/* <div className='flex gap-[15px] mb-[10px]'>
-                <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
-                  <Image src='/assets/credit_card.png' alt='' layout='fill' objectFit='contain' />
-                </div>
-                <div className='flex flex-1 items-center justify-between'>
-                  <div className='flex items-center gap-[8px]'>
-                    <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>Thẻ</h3>
-                    <span className='text-[#a4a5a8] px-[8px] py-[6px] rounded-full bg-[#e0e0e0a3] md:text-[14px] md:px-[6px]'>
-                      Đề xuất
-                    </span>
-                  </div>
-                  <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
-                    <Image src='/assets/button.png' alt='' layout='fill' objectFit='contain' />
-                  </div>
-                </div>
-              </div> */}
+              <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
 
-              <div className='flex gap-[15px]'>
-                <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
-                  <Image src='/assets/money.png' alt='' layout='fill' objectFit='contain' />
-                </div>
-                <div className='flex flex-1 items-center justify-between'>
-                  <div className='flex items-center gap-[8px]'>
-                    <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>Tiền mặt</h3>
-                  </div>
-                  <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
-                    <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
-                  </div>
-                </div>
+              <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <span className='text-[#4A4B4D] text-[16px]'>
+                  Bằng việc đặt đơn này, bạn đã đồng ý Điều khoản Sử dụng và Quy chế hoạt động của chúng tôi
+                </span>
               </div>
-            </div>
-
-            <div className='p-[20px]' style={{ borderBottom: "6px solid #e0e0e0a3" }}>
-              <span className='text-[#4A4B4D] text-[18px] font-bold'>Ưu đãi</span>
-
-              <Link href={`/store/${storeId}/coupons`} className='flex gap-[15px] mb-[10px] mt-[20px]'>
-                <div className='relative w-[30px] pt-[30px]'>
-                  <Image src='/assets/marketing.png' alt='' layout='fill' objectFit='contain' />
-                </div>
-                <div className='flex flex-1 items-center justify-between'>
-                  <span className='text-[#4A4B4D] text-[18px]'>Sử dụng ưu đãi hoặc mã khuyến mãi</span>
-                  <div className='relative w-[20px] pt-[20px]'>
-                    <Image src='/assets/arrow_right.png' alt='' layout='fill' objectFit='contain' />
-                  </div>
-                </div>
-              </Link>
-            </div>
-
-            <div className='p-[20px]' style={{ borderBottom: "6px solid #e0e0e0a3" }}>
-              <span className='text-[#4A4B4D] text-[16px]'>
-                Bằng việc đặt đơn này, bạn đã đồng ý Điều khoản Sử dụng và Quy chế hoạt động của chúng tôi
-              </span>
             </div>
           </div>
 
@@ -322,7 +334,7 @@ const page = () => {
             </div>
             <div
               onClick={handleCompleteCart}
-              className='flex items-center justify-center rounded-[8px] bg-[#fc6011] text-[#fff] px-[20px] py-[10px] md:px-[10px] lg:w-[60%] md:w-[80%] md:mx-auto cursor-pointer shadow-md hover:shadow-lg'
+              className='flex items-center justify-center rounded-[8px] bg-[#fc6011] text-[#fff] px-[20px] py-[10px] md:px-[10px] lg:w-[60%] md:w-[80%] md:mx-auto cursor-pointer shadow-md hover:shadow-lg transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]'
             >
               <span className='text-[#fff] text-[20px] font-semibold md:text-[18px]'>Đặt đơn</span>
             </div>

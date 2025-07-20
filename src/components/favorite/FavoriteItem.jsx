@@ -12,7 +12,6 @@ const FavoriteItem = ({ store }) => {
   const handleRemoveFavorite = async () => {
     try {
       await favoriteService.removeFavorite(store._id);
-
       toast.success("Xóa khỏi yêu thích thành công!");
       refreshFavorite();
     } catch (error) {
@@ -28,56 +27,68 @@ const FavoriteItem = ({ store }) => {
       confirmButtonText: "Đồng ý",
       cancelButtonText: "Hủy",
     });
-
     if (result.isConfirmed) {
       await handleRemoveFavorite();
     }
   };
 
   return (
-    <Link href={`/store/${store._id}`} className='relative'>
-      <div className='relative flex flex-col gap-[4px] min-w-[300px] pt-[45%]'>
-        <Image src={store.avatar.url || ""} alt='' layout='fill' objectFit='cover' className='rounded-[6px]' />
+    <Link
+      href={`/store/${store._id}`}
+      className='relative block bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg'
+    >
+      {/* Hình ảnh cửa hàng */}
+      <div className='relative w-full pt-[55%]'>
+        <Image
+          src={store.avatar.url || "/placeholder.png"}
+          alt={store.name}
+          fill
+          className='object-cover rounded-t-2xl'
+        />
       </div>
 
-      <div className='flex flex-1 items-center justify-between md:p-[10px]'>
-        <div className='flex flex-col overflow-hidden'>
-          <h4 className='text-[#4A4B4D] text-[20px] font-semibold line-clamp-1'>{store.name}</h4>
+      {/* Nội dung */}
+      <div className='flex flex-col gap-1 p-4'>
+        <h4 className='text-gray-800 text-lg font-semibold line-clamp-1'>{store.name}</h4>
 
-          <div className='flex items-center gap-[4px] min-w-0 overflow-hidden text-ellipsis whitespace-nowrap'>
-            {store.storeCategory.map((category, index) => (
-              <Link href={`/search?category=${category._id}`} key={category._id} className='text-[#636464]'>
-                {category.name}
-                {index !== store.storeCategory.length - 1 && <span>, </span>}
-              </Link>
-            ))}
-          </div>
-
-          <div className='flex items-center gap-[6px]'>
-            {store.avgRating != 0 && (
-              <>
-                <div className='relative w-[20px] pt-[20px] md:w-[15px] md:pt-[15px]'>
-                  <Image src='/assets/star_active.png' alt='' layout='fill' objectFit='fill' />
-                </div>
-                <span className='text-[#fc6011] md:text-[14px]'>{store.avgRating.toFixed(2)}</span>
-              </>
-            )}
-            {store.amountRating != 0 && (
-              <span className='text-[#636464] md:text-[14px]'>{`(${store.amountRating} đánh giá)`}</span>
-            )}
-          </div>
+        {/* Danh mục */}
+        <div className='text-sm text-gray-600 truncate'>
+          {store.storeCategory.map((category, index) => (
+            <Link
+              href={`/search?category=${category._id}`}
+              key={category._id}
+              className='hover:underline hover:text-orange-500'
+            >
+              {category.name}
+              {index !== store.storeCategory.length - 1 && <span>, </span>}
+            </Link>
+          ))}
         </div>
 
-        <div
-          className='absolute top-[10px] right-[10px] z-10 p-[8px] rounded-full bg-[#e7e7e7c4] hover:bg-[#e7e7e7e8] cursor-pointer'
-          onClick={(e) => {
-            e.preventDefault();
-            confirmRemoveFavorite();
-          }}
-        >
-          <div className='relative w-[30px] pt-[30px] md:w-[24px] md:pt-[24px]'>
-            <Image src='/assets/trash.png' alt='' layout='fill' objectFit='contain' />
-          </div>
+        {/* Rating */}
+        <div className='flex items-center gap-2 mt-1'>
+          {store.avgRating > 0 && (
+            <>
+              <div className='relative w-4 h-4'>
+                <Image src='/assets/star_active.png' alt='rating' fill className='object-contain' />
+              </div>
+              <span className='text-orange-500 text-sm font-medium'>{store.avgRating.toFixed(1)}</span>
+            </>
+          )}
+          {store.amountRating > 0 && <span className='text-gray-500 text-sm'>({store.amountRating} đánh giá)</span>}
+        </div>
+      </div>
+
+      {/* Nút xóa */}
+      <div
+        className='absolute top-3 right-3 z-10 p-2 bg-gray-200 hover:bg-gray-300 rounded-full cursor-pointer transition'
+        onClick={(e) => {
+          e.preventDefault();
+          confirmRemoveFavorite();
+        }}
+      >
+        <div className='relative w-6 h-6'>
+          <Image src='/assets/trash.png' alt='remove' fill className='object-contain' />
         </div>
       </div>
     </Link>

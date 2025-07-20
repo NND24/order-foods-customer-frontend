@@ -250,155 +250,184 @@ const page = () => {
     <>
       {dishInfo && (
         <>
-          <div className='pb-[120px] md:pt-[75px] md:mt-[20px] bg-[#fff] md:bg-[#f9f9f9]'>
+          <div className='pb-[120px] md:pt-[75px] md:mt-[20px] bg-[#fff]'>
             <Heading title={dishInfo?.name} description='' keywords='' />
             <div className='hidden md:block'>
               <Header />
             </div>
 
-            <div className='relative bg-[#fff] lg:w-[60%] md:w-[80%] md:mx-auto md:border md:border-[#a3a3a3a3] md:border-solid md:rounded-[10px] md:shadow-[rgba(0,0,0,0.24)_0px_3px_8px] md:overflow-hidden'>
-              <div className='absolute top-0 right-0 left-0 z-10 flex items-center justify-between px-[20px] pt-[20px]'>
-                <Link
-                  href={`/store/${storeId}`}
-                  className='relative w-[40px] pt-[40px] rounded-full bg-[#e0e0e0a3] overflow-hidden'
-                >
-                  <Image src='/assets/arrow_left_white.png' alt='' layout='fill' className='p-[8px]' />
-                </Link>
-              </div>
-
-              <div className='relative pt-[50%] z-0 md:pt-[40%] lg:pt-[35%]'>
-                <Image src={dishInfo?.image.url || ""} alt='' layout='fill' objectFit='contain' />
-              </div>
-
-              <div className='p-[20px]' style={{ borderBottom: "6px solid #e0e0e0a3" }}>
-                <div className='flex justify-between'>
-                  <h3 className='text-[#4A4B4D] text-[28px] font-bold' name='dishName'>
-                    {dishInfo?.name}
-                  </h3>
-                  <span className='text-[#4A4B4D] text-[28px] font-bold' name='dishPrice'>
-                    {Number(dishInfo?.price).toLocaleString("vi-VN")}đ
-                  </span>
+            <div className='lg:w-[60%] md:w-[80%] md:mx-auto'>
+              <div className='relative bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <div className='absolute top-0 right-0 left-0 z-10 flex items-center justify-between px-[20px] pt-[20px]'>
+                  <Link
+                    href={`/store/${storeId}`}
+                    className='relative w-[40px] pt-[40px] rounded-full bg-[#e0e0e0a3] overflow-hidden'
+                  >
+                    <Image src='/assets/arrow_left_white.png' alt='' layout='fill' className='p-[8px]' />
+                  </Link>
                 </div>
-                <p className='text-[#a4a5a8]'>{dishInfo?.description}</p>
-              </div>
 
-              {dishInfo.toppingGroups && dishInfo.toppingGroups.length > 0 && (
-                <div className='px-[20px] pb-[20px]' style={{ borderBottom: "6px solid #e0e0e0a3" }}>
-                  {dishInfo.toppingGroups?.map((toppingGroup) => (
-                    <>
-                      {toppingGroup.toppings.length > 0 && (
-                        <div key={toppingGroup._id}>
-                          <div className='flex gap-[10px] pt-[20px]'>
-                            <h3 className='text-[#4A4B4D] text-[20px] font-bold'>{toppingGroup.name}</h3>
-                          </div>
-                          {toppingGroup.onlyOnce
-                            ? toppingGroup.toppings.map((topping) => (
-                                <ToppingItemRadio
-                                  name='toppingItems'
-                                  key={topping._id}
-                                  topping={topping}
-                                  toppingGroup={toppingGroup}
-                                  selectedTopping={toppingsValue}
-                                  handleChooseTopping={handleChooseTopping}
-                                />
-                              ))
-                            : toppingGroup.toppings.map((topping) => (
-                                <ToppingItemCheckBox
-                                  name='toppingItems'
-                                  key={topping._id}
-                                  topping={topping}
-                                  selectedTopping={toppingsValue}
-                                  toppingGroup={toppingGroup}
-                                  handleChooseTopping={handleChooseTopping}
-                                />
-                              ))}
-                        </div>
-                      )}
-                    </>
-                  ))}
+                <div className='relative pt-[50%] z-0 md:pt-[40%] lg:pt-[35%]'>
+                  <Image src={dishInfo?.image.url || ""} alt='' layout='fill' objectFit='contain' />
                 </div>
-              )}
 
-              <div className='py-[20px]'>
-                <div className='flex gap-[10px] px-[20px] pb-[20px]'>
-                  <h3 className='text-[#4A4B4D] text-[20px] font-bold'>Thêm lưu ý cho quán</h3>
-                  <span className='text-[#a4a5a8]'>Không bắt buộc</span>
+                <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                  <div className='flex justify-between'>
+                    <h3 className='text-[#4A4B4D] text-[28px] font-bold' name='dishName'>
+                      {dishInfo?.name}
+                    </h3>
+                    <span className='text-[#4A4B4D] text-[28px] font-bold' name='dishPrice'>
+                      {Number(dishInfo?.price).toLocaleString("vi-VN")}đ
+                    </span>
+                  </div>
+                  <p className='text-[#a4a5a8]'>{dishInfo?.description}</p>
                 </div>
-                <div
-                  className='p-[20px]'
-                  style={{ borderBottom: "1px solid #a3a3a3a3", borderTop: "1px solid #a3a3a3a3" }}
-                >
+
+                <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+                {dishInfo.toppingGroups && dishInfo.toppingGroups.length > 0 && (
+                  <>
+                    <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                      {dishInfo.toppingGroups?.map((toppingGroup) => (
+                        <>
+                          {toppingGroup.toppings.length > 0 && (
+                            <div key={toppingGroup._id}>
+                              <div className='flex gap-[10px]'>
+                                <h3 className='text-[#4A4B4D] text-[20px] font-bold'>{toppingGroup.name}</h3>
+                              </div>
+                              {toppingGroup.onlyOnce
+                                ? toppingGroup.toppings.map((topping) => (
+                                    <ToppingItemRadio
+                                      name='toppingItems'
+                                      key={topping._id}
+                                      topping={topping}
+                                      toppingGroup={toppingGroup}
+                                      selectedTopping={toppingsValue}
+                                      handleChooseTopping={handleChooseTopping}
+                                    />
+                                  ))
+                                : toppingGroup.toppings.map((topping) => (
+                                    <ToppingItemCheckBox
+                                      name='toppingItems'
+                                      key={topping._id}
+                                      topping={topping}
+                                      selectedTopping={toppingsValue}
+                                      toppingGroup={toppingGroup}
+                                      handleChooseTopping={handleChooseTopping}
+                                    />
+                                  ))}
+                            </div>
+                          )}
+                        </>
+                      ))}
+                    </div>
+
+                    {/* Divider */}
+                    <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+                  </>
+                )}
+
+                <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                  <div className='pb-[20px]'>
+                    <h3 className='text-[#4A4B4D] text-[20px] font-bold'>
+                      Thêm lưu ý cho quán{" "}
+                      <span className='text-[#a4a5a8] text-[16px] font-normal'>(Không bắt buộc)</span>
+                    </h3>
+                  </div>
                   <textarea
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
-                    className='p-[10px] w-full border border-solid border-[#a3a3a3a3] rounded-[10px]'
+                    className='p-[10px] w-full border border-solid border-[#a3a3a3a3] rounded-[10px] focus:ring-2 focus:ring-[#fc6011] resize-none'
                     placeholder='Việc thực hiện yêu cầu còn tùy thuộc vào khả năng của quán'
                   />
                 </div>
-              </div>
 
-              <div className='p-[20px] flex items-center justify-center gap-[5px]'>
-                <Image
-                  name='decreaseQuantityBtn'
-                  src='/assets/minus.png'
-                  alt=''
-                  width={50}
-                  height={50}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChangeQuantity(-1);
-                  }}
-                  className='border border-[#a3a3a3a3] border-solid rounded-[6px] p-[8px] shadow-[rgba(0,0,0,0.24)_0px_3px_8px] cursor-pointer'
-                />
-                <input
-                  type='number'
-                  value={quantity}
-                  onChange={handleQuantityInputChange}
-                  className='text-[#4A4B4D] text-[24px] font-bold w-[60px] text-center bg-transparent'
-                />
-                <Image
-                  name='increaseQuantityBtn'
-                  src='/assets/plus_active.png'
-                  alt=''
-                  width={50}
-                  height={50}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    handleChangeQuantity(1);
-                  }}
-                  className='border border-[#a3a3a3a3] border-solid rounded-[6px] p-[8px] shadow-[rgba(0,0,0,0.24)_0px_3px_8px] cursor-pointer'
-                />
+                <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
+
+                <div className='flex items-center justify-center gap-4 bg-white p-5 border border-gray-100 rounded-2xl shadow-md md:p-6 hover:shadow-lg transition-all duration-200'>
+                  {/* Nút giảm */}
+                  <button
+                    name='decreaseQuantityBtn'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleChangeQuantity(-1);
+                    }}
+                    className='w-[50px] h-[50px] flex items-center justify-center rounded-full bg-gradient-to-r from-gray-100 to-gray-200 
+               border border-gray-300 shadow-md cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95'
+                  >
+                    <Image
+                      src='/assets/minus.png'
+                      alt='Decrease'
+                      width={24}
+                      height={24}
+                      className='pointer-events-none'
+                    />
+                  </button>
+
+                  {/* Input số lượng */}
+                  <input
+                    type='number'
+                    value={quantity}
+                    onChange={handleQuantityInputChange}
+                    className='text-[#4A4B4D] text-2xl font-bold w-[70px] text-center bg-gray-50 border border-gray-200 rounded-lg py-2 focus:outline-none focus:ring-2 focus:ring-[#fc6011] transition-all duration-200'
+                  />
+
+                  {/* Nút tăng */}
+                  <button
+                    name='increaseQuantityBtn'
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleChangeQuantity(1);
+                    }}
+                    className='w-[50px] h-[50px] flex items-center justify-center rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff7a33] 
+               shadow-md cursor-pointer transition-all duration-200 hover:scale-105 hover:shadow-lg active:scale-95'
+                  >
+                    <Image
+                      src='/assets/plus_white.png'
+                      alt='Increase'
+                      width={24}
+                      height={24}
+                      className='pointer-events-none'
+                    />
+                  </button>
+                </div>
               </div>
             </div>
           </div>
 
-          <div className='fixed bottom-0 left-0 right-0 bg-[#fff] px-[20px] md:px-0 py-[15px] z-[100] flex items-center justify-center'>
+          <div className='fixed bottom-0 left-0 right-0 bg-white px-5 md:px-0 py-4 z-[100] flex items-center justify-center shadow-[0_-2px_10px_rgba(0,0,0,0.1)]'>
             {quantity > 0 ? (
               <div
                 name='addCartBtn'
-                className='flex items-center justify-center gap-[6px] rounded-[8px] bg-[#fc6011] text-[#fff] py-[15px] px-[20px] lg:w-[60%] md:w-[80%] w-full md:mx-auto cursor-pointer shadow-md hover:shadow-lg'
+                className='flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-[#fc6011] to-[#ff7a33] text-white py-4 px-6 
+                 lg:w-[60%] md:w-[80%] w-full md:mx-auto cursor-pointer shadow-md hover:shadow-lg 
+                 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]'
                 onClick={handleAddToCart}
               >
-                <span className='text-[#fff] text-[20px] font-semibold'>Thêm vào giỏ hàng</span>
-                <span className='text-[#fff] text-[20px] font-semibold'>-</span>
-                <span className='text-[#fff] text-[20px] font-semibold' name='totalPrice'>
+                <span className='text-white text-xl font-semibold'>Thêm vào giỏ hàng</span>
+                <span className='text-white text-xl font-semibold'>•</span>
+                <span className='text-white text-xl font-semibold' name='totalPrice'>
                   {Number(price.toFixed(0)).toLocaleString("vi-VN")}đ
                 </span>
               </div>
             ) : (
-              <div className='flex items-center gap-[10px] lg:w-[60%] md:w-[80%] w-full md:mx-auto '>
+              <div className='flex items-center gap-4 lg:w-[60%] md:w-[80%] w-full md:mx-auto'>
                 <Link
                   href={`/store/${storeId}`}
-                  className='flex items-center justify-center gap-[6px] rounded-[8px] bg-[#fc6011] text-[#fff] py-[15px] px-[20px] cursor-pointer w-[65%] md:w-[80%] shadow-md hover:shadow-lg'
+                  className='flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#fc6011] to-[#ff7a33] text-white py-4 px-4 sm:px-6 
+                   cursor-pointer w-[65%] md:w-[80%] shadow-md hover:shadow-lg 
+                   transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]'
                 >
-                  <span className='text-[#fff] text-[20px] font-semibold'>Quay lại cửa hàng</span>
+                  <span className='text-white text-xl font-semibold'>Quay lại cửa hàng</span>
                 </Link>
 
                 <div
-                  className='flex items-center justify-center gap-[6px] rounded-[8px] bg-[#c9c8c8] text-[#fff] py-[15px] px-[20px] cursor-pointer w-[35%] md:w-[20%] shadow-md hover:shadow-lg'
+                  className='flex items-center justify-center gap-2 rounded-2xl bg-gray-300 text-gray-700 py-4 px-4 sm:px-6 
+                   cursor-pointer w-[35%] md:w-[20%] shadow-md hover:shadow-lg 
+                   transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]'
                   onClick={handleRemoveFromCart}
                 >
-                  <span className='text-[#4a4b4d] text-[20px] font-semibold'>Bỏ chọn</span>
+                  <span className='text-gray-700 text-xl font-semibold'>Bỏ chọn</span>
                 </div>
               </div>
             )}
