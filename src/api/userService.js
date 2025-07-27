@@ -1,4 +1,4 @@
-import { config, instance } from "../utils/axiosConfig";
+import { config, instance } from "@/utils/axiosConfig";
 
 const getCurrentUser = async (id) => {
   const response = await instance.get(`/user/${id}`, config());
