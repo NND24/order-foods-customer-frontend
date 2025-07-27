@@ -14,7 +14,6 @@ import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
 
 const page = () => {
-  const router = useRouter();
   const { id: storeId, dishId } = useParams();
 
   const [dishInfo, setDishInfo] = useState(null);
@@ -273,7 +272,7 @@ const page = () => {
 
                 <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
                   <div className='flex justify-between'>
-                    <h3 className='text-[#4A4B4D] text-[28px] font-bold' name='dishName'>
+                    <h3 className='text-[#4A4B4D] text-[28px] font-bold line-clamp-2' name='dishName'>
                       {dishInfo?.name}
                     </h3>
                     <span className='text-[#4A4B4D] text-[28px] font-bold' name='dishPrice'>

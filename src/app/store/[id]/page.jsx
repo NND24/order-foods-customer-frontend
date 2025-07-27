@@ -361,7 +361,7 @@ const page = () => {
               )}
 
               {/* Map */}
-              <div className='w-full h-[150px] my-4 relative rounded-xl overflow-hidden shadow-md'>
+              <div className='w-full h-[150px] my-4 relative rounded-xl overflow-hidden shadow-md z-10'>
                 {typeof window !== "undefined" && storeInfo?.address && storeInfo?.address.lat && (
                   <MapContainer
                     key={`${storeInfo.address.lat}-${storeInfo.address.lon}`}
