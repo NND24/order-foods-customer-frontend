@@ -150,7 +150,7 @@ const page = () => {
       toast.error("Vui lòng nhập số điện thoại người nhận");
     } else {
       try {
-        await cartService.completeCart({
+        const response = await cartService.completeCart({
           storeId,
           paymentMethod: "cash",
           deliveryAddress: storeLocation.address,
@@ -165,7 +165,7 @@ const page = () => {
         toast.success("Đặt thành công");
         refreshOrder();
         refreshCart();
-        router.push(`/orders/detail-order/${orderData.order._id}`);
+        router.push(`/orders/detail-order/${response.orderId}`);
       } catch (error) {
         console.log(error);
       }

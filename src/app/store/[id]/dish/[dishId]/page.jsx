@@ -288,10 +288,10 @@ const page = () => {
                 {dishInfo.toppingGroups && dishInfo.toppingGroups.length > 0 && (
                   <>
                     <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
-                      {dishInfo.toppingGroups?.map((toppingGroup) => (
-                        <>
-                          {toppingGroup.toppings.length > 0 && (
-                            <div key={toppingGroup._id}>
+                      {dishInfo.toppingGroups.map(
+                        (toppingGroup, index) =>
+                          toppingGroup.toppings.length > 0 && (
+                            <div key={`${toppingGroup._id}-${index}`}>
                               <div className='flex gap-[10px]'>
                                 <h3 className='text-[#4A4B4D] text-[20px] font-bold'>{toppingGroup.name}</h3>
                               </div>
@@ -299,7 +299,7 @@ const page = () => {
                                 ? toppingGroup.toppings.map((topping) => (
                                     <ToppingItemRadio
                                       name='toppingItems'
-                                      key={topping._id}
+                                      key={`${toppingGroup._id}-${topping._id}`}
                                       topping={topping}
                                       toppingGroup={toppingGroup}
                                       selectedTopping={toppingsValue}
@@ -309,7 +309,7 @@ const page = () => {
                                 : toppingGroup.toppings.map((topping) => (
                                     <ToppingItemCheckBox
                                       name='toppingItems'
-                                      key={topping._id}
+                                      key={`${toppingGroup._id}-${topping._id}`}
                                       topping={topping}
                                       selectedTopping={toppingsValue}
                                       toppingGroup={toppingGroup}
@@ -317,9 +317,8 @@ const page = () => {
                                     />
                                   ))}
                             </div>
-                          )}
-                        </>
-                      ))}
+                          )
+                      )}
                     </div>
 
                     {/* Divider */}

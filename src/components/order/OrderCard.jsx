@@ -21,6 +21,8 @@ const OrderCard = ({ order }) => {
     setStatus(statusMap[order.status] || "");
   }, [order]);
 
+  console.log(order);
+
   return (
     <Link
       href={`/orders/detail-order/${order._id}`}
@@ -49,7 +51,7 @@ const OrderCard = ({ order }) => {
           ))}
         </span>
         <span
-          className={`text-sm font-medium ${
+          className={`text-sm font-medium truncate ${
             order.status === "cancelled"
               ? "text-red-500"
               : order.status === "done"

@@ -7,7 +7,7 @@ const StoreBigCard = ({ store }) => {
     <Link
       href={`/store/${store._id}`}
       data-testid='store-card'
-      className='block bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden'
+      className='block bg-white rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300 overflow-hidden'
     >
       {/* Ảnh cửa hàng */}
       <div className='relative w-full pt-[55%] rounded-t-2xl overflow-hidden'>

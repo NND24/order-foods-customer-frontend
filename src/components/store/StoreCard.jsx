@@ -6,7 +6,7 @@ const StoreCard = ({ store }) => {
   return (
     <Link
       href={`/store/${store._id}`}
-      className='flex gap-4 items-start p-3 bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
+      className='flex gap-4 items-start p-3 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
     >
       {/* Hình ảnh cửa hàng */}
       <div className='relative w-[90px] h-[90px] flex-shrink-0 rounded-xl overflow-hidden'>

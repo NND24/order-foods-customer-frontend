@@ -10,7 +10,7 @@ const StoreSlider = ({ reverse, stores }) => {
     <>
       <div className='hidden sm:block'>
         <Swiper
-          className='card-slider mb-[15px]'
+          className='card-slider mb-[15px] !py-[5px]'
           grabCursor={true}
           modules={[Autoplay]}
           autoplay={{

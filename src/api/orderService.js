@@ -21,6 +21,13 @@ const cancelOrder = async (orderId) => {
   }
 };
 
+const updateOrderStatus = async ({ orderId, data }) => {
+  const response = await instance.put(`/order/${orderId}/update-status`, data, config());
+  if (response.data) {
+    return response.data;
+  }
+};
+
 const reOrder = async (orderId) => {
   const response = await instance.post(`/order/re-order/${orderId}`, null, config());
   if (response.data) {
@@ -32,5 +39,6 @@ export const orderService = {
   getUserOrder,
   getOrderDetail,
   cancelOrder,
+  updateOrderStatus,
   reOrder,
 };

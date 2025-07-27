@@ -62,16 +62,12 @@ const CartItem = ({ cartItem }) => {
         </div>
 
         {/* Danh mục */}
-        <div className='flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-600 truncate'>
+        <div className='text-gray-600 text-sm mb-2 truncate'>
           {cartItem.store.storeCategory.map((category, index) => (
-            <Link
-              href={`/search?category=${category._id}`}
-              key={category._id}
-              className='hover:underline hover:text-orange-500 flex items-center gap-1'
-            >
+            <span key={category._id}>
               {category.name}
-              {index !== cartItem.store.storeCategory.length - 1 && <span className='text-orange-500'>•</span>}
-            </Link>
+              {index !== cartItem.store.storeCategory.length - 1 && <span className='text-orange-500'> • </span>}
+            </span>
           ))}
         </div>
 

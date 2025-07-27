@@ -52,16 +52,12 @@ const FavoriteItem = ({ store }) => {
         <h4 className='text-gray-800 text-lg font-semibold line-clamp-1'>{store.name}</h4>
 
         {/* Danh mục */}
-        <div className='text-sm text-gray-600 truncate'>
+        <div className='text-gray-600 text-sm mb-2 truncate'>
           {store.storeCategory.map((category, index) => (
-            <Link
-              href={`/search?category=${category._id}`}
-              key={category._id}
-              className='hover:underline hover:text-orange-500'
-            >
+            <span key={category._id}>
               {category.name}
-              {index !== store.storeCategory.length - 1 && <span>, </span>}
-            </Link>
+              {index !== store.storeCategory.length - 1 && <span className='text-orange-500'> • </span>}
+            </span>
           ))}
         </div>
 

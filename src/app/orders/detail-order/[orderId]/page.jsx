@@ -95,6 +95,25 @@ const Page = () => {
     }
   };
 
+  const confirmTakeOrder = async () => {
+    const result = await Swal.fire({
+      title: "Bạn có chắc muốn xác nhận đơn hàng không?",
+      text: "Khi xác nhận, đơn hàng sẽ được đánh dấu là đã hoàn tất",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Xác nhận",
+      cancelButtonText: "Hủy",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await orderService.updateOrderStatus({ orderId, data: { status: "done" } });
+        toast.success("Xác nhận đơn hàng thành công!");
+        getOrderDetail();
+      } catch (error) {}
+    }
+  };
+
   return (
     <div className='pb-36 bg-white md:bg-white md:pt-28'>
       <Heading title='Chi tiết đơn hàng' description='' keywords='' />
@@ -160,6 +179,16 @@ const Page = () => {
                           <path strokeLinecap='round' strokeLinejoin='round' d='M6 18L18 6M6 6l12 12' />
                         </svg>
                         Hủy đơn hàng
+                      </button>
+                    </div>
+                  )}
+                  {orderDetail?.status === "taken" && (
+                    <div className='hidden sm:block'>
+                      <button
+                        className='flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105'
+                        onClick={confirmTakeOrder}
+                      >
+                        Xác nhận đơn hàng
                       </button>
                     </div>
                   )}
@@ -329,6 +358,17 @@ const Page = () => {
                         className='w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all'
                       >
                         Hủy đơn hàng
+                      </button>
+                    </div>
+                  )}
+
+                  {orderDetail?.status === "taken" && (
+                    <div className='block sm:hidden'>
+                      <button
+                        className='w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all'
+                        onClick={confirmCancelOrder}
+                      >
+                        Xác nhận đơn hàng
                       </button>
                     </div>
                   )}

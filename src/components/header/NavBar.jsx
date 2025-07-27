@@ -2,10 +2,11 @@
 import { useAuth } from "@/context/authContext";
 import { useCart } from "@/context/cartContext";
 import { useFavorite } from "@/context/favoriteContext";
+import { useOrder } from "@/context/orderContext";
 import { useSocket } from "@/context/socketContext";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 const NavBar = ({ page }) => {
   const { user } = useAuth();
@@ -13,6 +14,13 @@ const NavBar = ({ page }) => {
   const { notifications } = useSocket();
   const { favorite } = useFavorite();
   const { cart } = useCart();
+  const { order } = useOrder();
+
+  const [currentOrders, setCurrentOrders] = useState([]);
+
+  useEffect(() => {
+    setCurrentOrders(order?.filter((o) => o.status !== "done"));
+  }, [order]);
 
   return (
     <div className='fixed bottom-0 right-0 left-0 z-[99] pt-[5px] bg-white md:bg-transparent w-full h-[75px] px-[25px] shadow-[0px_-10px_40px_0px_rgba(110,110,110,0.45)] md:relative md:w-fit md:p-0 md:shadow-none'>
@@ -50,7 +58,7 @@ const NavBar = ({ page }) => {
                 className={`hidden group-hover:block ${page == "carts" ? "!block" : ""}`}
               />
               <p
-                className={`text-[12px] group-hover:text-[#fc6011] ${
+                className={`text-[12px] md:text-[11px] lg:text-[12px] group-hover:text-[#fc6011] ${
                   page == "carts" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                 }`}
               >
@@ -64,7 +72,12 @@ const NavBar = ({ page }) => {
               )}
             </Link>
 
-            <Link href='/orders' className='group flex flex-col items-center gap-[1px]' id='ordersUrl' name='orderBtn'>
+            <Link
+              href='/orders'
+              className='relative group flex flex-col items-center gap-[1px]'
+              id='ordersUrl'
+              name='orderBtn'
+            >
               <Image
                 src='/assets/ic_order.png'
                 alt=''
@@ -80,12 +93,18 @@ const NavBar = ({ page }) => {
                 className={`hidden group-hover:block ${page == "orders" ? "!block" : ""}`}
               />
               <p
-                className={`text-[12px] group-hover:text-[#fc6011] ${
+                className={`text-[12px] md:text-[11px] lg:text-[12px] group-hover:text-[#fc6011] ${
                   page == "orders" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                 }`}
               >
                 Đơn hàng
               </p>
+
+              {order && currentOrders && currentOrders.length > 0 && (
+                <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
+                  <span className='text-[11px] text-white'>{currentOrders.length}</span>
+                </div>
+              )}
             </Link>
           </div>
           <Link
@@ -122,7 +141,7 @@ const NavBar = ({ page }) => {
                   className={`hidden group-hover:block ${page == "notifications" ? "!block" : ""}`}
                 />
                 <p
-                  className={`text-[12px] group-hover:text-[#fc6011] ${
+                  className={`text-[12px] md:text-[11px] lg:text-[12px] group-hover:text-[#fc6011] ${
                     page == "notifications" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                   }`}
                 >
@@ -156,7 +175,7 @@ const NavBar = ({ page }) => {
                   className={`hidden group-hover:block ${page == "favorite" ? "!block" : ""}`}
                 />
                 <p
-                  className={`text-[12px] group-hover:text-[#fc6011] ${
+                  className={`text-[12px] md:text-[11px] lg:text-[12px] group-hover:text-[#fc6011] ${
                     page == "favorite" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                   }`}
                 >
@@ -192,7 +211,7 @@ const NavBar = ({ page }) => {
                 className={`hidden group-hover:block ${page == "account" ? "!block" : ""}`}
               />
               <p
-                className={`text-[12px] group-hover:text-[#fc6011] ${
+                className={`text-[12px] md:text-[11px] lg:text-[12px] group-hover:text-[#fc6011] ${
                   page == "account" ? "text-[#fc6011]" : "text-[#4A4B4D]"
                 }`}
               >

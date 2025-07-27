@@ -11,7 +11,7 @@ const StoreBigSlider = ({ allStore }) => {
     <>
       <div className='hidden sm:block'>
         <Swiper
-          className='big-card-slider'
+          className='big-card-slider !py-[5px]'
           grabCursor={true}
           navigation={true}
           modules={[Navigation]}

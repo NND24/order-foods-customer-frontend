@@ -97,15 +97,17 @@ const RatingItem = ({ rating, userId, refetchAllStoreRating, refetchPaginationRa
         )}
 
         <p className='text-[#000] text-[18px] md:text-[16px] mt-[10px]'>{rating.comment}</p>
-        <p className='text-[#636464] pb-[10px] pt-[6px] md:text-[14px] overflow-hidden text-ellipsis whitespace-nowrap'>
-          Đã đặt:{" "}
-          {rating.order.items.map((dish, index) => (
-            <span key={index}>
-              {dish.dishName}
-              {index < rating.order.items.length - 1 ? ", " : ""}
-            </span>
-          ))}
-        </p>
+        {rating.order && rating.order.items.length > 0 && (
+          <p className='text-[#636464] pb-[10px] pt-[6px] md:text-[14px] overflow-hidden text-ellipsis whitespace-nowrap'>
+            Đã đặt:{" "}
+            {rating.order.items.map((dish, index) => (
+              <span key={index}>
+                {dish.dishName}
+                {index < rating.order.items.length - 1 ? ", " : ""}
+              </span>
+            ))}
+          </p>
+        )}
       </div>
 
       {/* <div className='px-[20px] py-[15px] bg-[#e6e6e6] rounded-[8px]'>

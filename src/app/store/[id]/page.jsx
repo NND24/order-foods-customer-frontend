@@ -20,7 +20,7 @@ import { favoriteService } from "@/api/favoriteService";
 import { ratingService } from "@/api/ratingService";
 import { toast } from "react-toastify";
 import { useAuth } from "@/context/authContext";
-import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
@@ -55,7 +55,7 @@ const page = () => {
   const [allStoreRatingDesc, setAllStoreRatingDesc] = useState(null);
 
   const { notifications } = useSocket();
-  const { cart, refreshCart } = useCart();
+  const { cart } = useCart();
   const { favorite, refreshFavorite } = useFavorite();
   const { user } = useAuth();
 
@@ -284,19 +284,18 @@ const page = () => {
                   <span className='text-[#4A4B4D] text-xl font-bold truncate'>{storeInfo?.name}</span>
 
                   {/* Categories */}
-                  <div className='flex flex-wrap items-center gap-2 mt-1 text-sm text-gray-500'>
-                    {storeInfo?.storeCategory.map((category, index) => (
-                      <>
-                        <div key={category._id}>
+                  <div className='flex flex-wrap gap-2 items-center mt-1 text-sm text-gray-500'>
+                    {storeInfo?.storeCategory &&
+                      storeInfo?.storeCategory.map((category, index) => (
+                        <div key={category._id || index} className='flex items-center gap-2'>
                           <Link href={`/search?category=${category._id}`} className='hover:text-[#fc6011] transition'>
                             {category.name}
                           </Link>
+                          {index !== storeInfo.storeCategory.length - 1 && (
+                            <span className='inline-block w-1 h-1 bg-[#fc6011] rounded-full'></span>
+                          )}
                         </div>
-                        {index !== storeInfo.storeCategory.length - 1 && (
-                          <span className='inline-block w-1 h-1 bg-[#fc6011] rounded-full'></span>
-                        )}
-                      </>
-                    ))}
+                      ))}
                   </div>
 
                   {/* Rating */}
@@ -398,7 +397,7 @@ const page = () => {
                           <RatingItem
                             key={rating._id}
                             rating={rating}
-                            userId={user._id}
+                            userId={user?._id}
                             refetchAllStoreRating={getAllStoreRating}
                             refetchPaginationRating={getPaginationRating}
                             refetchAllStoreRatingDesc={getAllStoreRatingDesc}

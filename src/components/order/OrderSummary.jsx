@@ -9,7 +9,7 @@ const OrderSummary = ({ detailItems, subtotalPrice, totalDiscount }) => {
 
       <div className=' flex flex-col gap-[8px]'>
         {detailItems &&
-          detailItems.map((item) => {
+          detailItems.map((item, index) => {
             const dishPrice = (item.dish?.price || 0) * item.quantity;
             const toppingsPrice =
               (Array.isArray(item.toppings)
@@ -21,6 +21,7 @@ const OrderSummary = ({ detailItems, subtotalPrice, totalDiscount }) => {
                 className='flex gap-[15px] pb-[15px]'
                 style={{ borderBottom: "1px solid #a3a3a3a3" }}
                 name='cartItems'
+                key={index}
               >
                 <div className='p-[8px] rounded-[6px] border border-[#a3a3a3a3] border-solid w-[40px] h-[40px]'>
                   <span className='text-[#fc6011] font-semibold' name='quantity'>
