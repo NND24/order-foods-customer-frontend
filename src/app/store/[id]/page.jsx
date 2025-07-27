@@ -26,6 +26,7 @@ import L from "leaflet";
 import markerIcon2x from "leaflet/dist/images/marker-icon-2x.png";
 import markerIcon from "leaflet/dist/images/marker-icon.png";
 import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import { Atom } from "react-loading-indicators";
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -53,6 +54,7 @@ const page = () => {
   const [allStoreRating, setAllStoreRating] = useState(null);
   const [paginationRating, setPaginationRating] = useState(null);
   const [allStoreRatingDesc, setAllStoreRatingDesc] = useState(null);
+  const [storeLoading, setStoreLoading] = useState(true);
 
   const { notifications } = useSocket();
   const { cart } = useCart();
@@ -63,8 +65,10 @@ const page = () => {
     try {
       const response = await storeService.getStoreInformation(storeId);
       setStoreInfo(response.data);
+      setStoreLoading(false);
     } catch (error) {
       toast.error(error?.data?.message || "Có lỗi xảy ra!");
+      setStoreLoading(true);
     }
   };
 
@@ -213,6 +217,14 @@ const page = () => {
       }
     }
   };
+
+  if (storeLoading) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <Atom color='#fc6011' size='medium' text='' textColor='' />
+      </div>
+    );
+  }
 
   return (
     <>

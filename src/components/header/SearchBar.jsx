@@ -1,21 +1,25 @@
 "use client";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const SearchBar = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [search, setSearch] = useState(searchParams.get("name") || "");
+  const [search, setSearch] = useState(searchParams.get("keyword") || "");
   const category = searchParams.get("category") || "";
   const sort = searchParams.get("sort") || "";
   const limit = searchParams.get("limit") || "20";
   const page = searchParams.get("page") || "1";
 
+  useEffect(() => {
+    setSearch(searchParams.get("keyword") || "");
+  }, [searchParams]);
+
   const handleSearch = () => {
     const params = new URLSearchParams();
-    if (search) params.set("name", search);
+    if (search) params.set("keyword", search);
     if (category) params.set("category", category);
     if (sort) params.set("sort", sort);
     if (limit) params.set("limit", limit);
@@ -25,7 +29,10 @@ const SearchBar = () => {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSearch();
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleSearch();
+    }
   };
 
   return (

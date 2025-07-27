@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { storeService } from "@/api/storeService";
 import { toast } from "react-toastify";
 import { useProvince } from "@/context/provinceContext";
@@ -24,7 +24,7 @@ export const useStoreSearch = (query) => {
 
       try {
         const [all, rating, standout] = await Promise.all([
-          storeService.getAllStore({ ...query, sort: "", lat, lon }),
+          storeService.getAllStore({ ...query, lat, lon }),
           storeService.getAllStore({ sort: "rating", lat, lon }),
           storeService.getAllStore({ sort: "standout", lat, lon }),
         ]);

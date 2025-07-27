@@ -20,7 +20,7 @@ const page = () => {
 
   const query = useMemo(
     () => ({
-      name: searchParams.get("name") || "",
+      keyword: searchParams.get("keyword") || "",
       category: searchParams.get("category") || "",
       sort: searchParams.get("sort") || "",
       limit: searchParams.get("limit") || "20",
