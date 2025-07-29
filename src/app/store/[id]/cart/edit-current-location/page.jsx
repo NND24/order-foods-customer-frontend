@@ -51,7 +51,7 @@ const page = () => {
 
   return (
     <div className='pt-[85px] pb-[90px] md:pt-[75px] md:mt-[20px] md:px-0 bg-[#fff] md:bg-[#f9f9f9]'>
-      <Heading title='Chỉnh sửa địa điểm' />
+      <Heading title='Thêm chi tiết địa chỉ' />
       <div className='hidden md:block'>
         <Header page='account' />
       </div>
@@ -64,7 +64,7 @@ const page = () => {
           <Link href={`/store/${storeId}/cart`} className='relative w-[30px] pt-[30px] md:w-[25px] md:pt-[25px]'>
             <Image src='/assets/arrow_left_long.png' alt='' layout='fill' objectFit='contain' />
           </Link>
-          <h3 className='text-[#4A4B4D] text-[24px] font-bold'>Chỉnh sửa địa điểm</h3>
+          <h3 className='text-[#4A4B4D] text-[24px] font-bold'>Thêm chi tiết địa chỉ</h3>
         </div>
 
         <form>
@@ -121,7 +121,7 @@ const page = () => {
               id=''
               onChange={(e) => setDetailAddress(e.target.value)}
               value={detailAddress}
-              placeholder='Vd: tên toàn nhà / địa điểm gần đó'
+              placeholder='Vd: tên toàn nhà / địa chỉ gần đó'
               className='bg-transparent text-[18px] md:text-[14px] w-full'
             />
           </div>
@@ -139,7 +139,7 @@ const page = () => {
               id=''
               onChange={(e) => setNote(e.target.value)}
               value={note}
-              placeholder='Chỉ dẫn chi tiết địa điểm cho tài xế'
+              placeholder='Chỉ dẫn chi tiết địa chỉ cho tài xế'
               className='bg-transparent text-[18px] md:text-[14px] w-full'
             />
           </div>
@@ -184,7 +184,7 @@ const page = () => {
 
           <div className='flex items-center justify-between gap-[10px] p-[20px]'>
             <div className='flex flex-col'>
-              <span className='text-[18px] text-[#4a4b4d] font-bold'>Thêm vào Địa điểm đã lưu</span>
+              <span className='text-[18px] text-[#4a4b4d] font-bold'>Thêm vào Địa chỉ đã lưu</span>
               <span className='text-[15px] text-[#a4a5a8]'>Lưu nơi này cho các đơn đặt hàng cho tương lai</span>
             </div>
 

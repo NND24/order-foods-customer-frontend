@@ -61,7 +61,7 @@ const OrderCard = ({ order }) => {
         >
           Trạng thái: {status}
         </span>
-        <span className='text-gray-600 text-sm line-clamp-1'>Giao tới: {order.shipInfo.address}</span>
+        <span className='text-gray-600 text-sm line-clamp-1'>Giao tới: {order?.shipInfo?.address}</span>
         <span className='text-gray-800 font-semibold text-base'>
           Đơn giá: {Number(order.finalTotal).toLocaleString("vi-VN")}đ
         </span>

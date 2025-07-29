@@ -73,12 +73,7 @@ const page = () => {
               </div>
             ) : (
               <div className='flex flex-col items-center text-center py-10'>
-                <Image
-                  src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSD17dvILSeV1lwagOw8lriHWzNb_hHikZUWA&s'
-                  alt='empty cart'
-                  width={150}
-                  height={150}
-                />
+                <Image src='/assets/no_favorite.png' alt='empty cart' width={150} height={150} />
                 <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Yêu thích trống</h3>
                 <p className='text-gray-500 mt-2'>Hãy tìm cửa hàng yêu thích!</p>
                 <button

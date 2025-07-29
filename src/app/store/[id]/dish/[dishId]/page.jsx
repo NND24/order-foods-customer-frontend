@@ -234,7 +234,7 @@ const page = () => {
   const handleRemoveFromCart = async () => {
     if (user) {
       try {
-        await cartService.updateCart({ storeId, dishId, quantity: 0, toppings });
+        await cartService.updateCart({ storeId, dishId, quantity: 0, toppings: [] });
         toast.success("Cập nhật giỏ hàng thành công");
         refreshCart();
       } catch (error) {

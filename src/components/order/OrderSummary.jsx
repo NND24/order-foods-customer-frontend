@@ -31,7 +31,7 @@ const OrderSummary = ({ detailItems, subtotalPrice, totalDiscount }) => {
 
                 <div className='flex flex-1 justify-between'>
                   <div className='flex flex-col'>
-                    <h3 className='text-[#4A4B4D] text-[18px] font-bold' name='dishName'>
+                    <h3 className='text-[#4A4B4D] text-[18px] font-bold line-clamp-1 pr-1' name='dishName'>
                       {item.dish.name}
                     </h3>
                     {item.toppings.map((topping) => (

@@ -7,6 +7,7 @@ import Heading from "@/components/Heading";
 import NavBar from "@/components/header/NavBar";
 import { notificationService } from "@/api/notificationService";
 import NotificationItem from "@/components/notification/NotificationItem";
+import Image from "next/image";
 
 const page = () => {
   const { socket, notifications, setNotifications } = useSocket();
@@ -42,7 +43,10 @@ const page = () => {
             ))}
           </>
         ) : (
-          <h3 className='text-[#4A4B4D] text-[24px] font-bold my-[10px]'>Không có thông báo nào!</h3>
+          <div className='flex flex-col items-center text-center py-10'>
+            <Image src='/assets/no_notification.png' alt='empty cart' width={150} height={150} />
+            <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Không có thông báo nào!</h3>
+          </div>
         )}
       </div>
 

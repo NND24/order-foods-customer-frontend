@@ -1,3 +1,4 @@
+import { authService } from "@/api/authService";
 import axios from "axios";
 
 export const instance = axios.create({
@@ -43,8 +44,14 @@ instance.interceptors.response.use(
           return instance(originalRequest);
         }
       } catch (refreshError) {
-        console.error("Refresh token failed:", refreshError);
-        // Có thể logout user nếu refresh fail
+        try {
+          await authService.logout();
+        } catch (e) {
+          console.error("Logout failed:", e);
+        } finally {
+          localStorage.clear();
+          window.location.href = "/";
+        }
       }
     }
     return Promise.reject(error);

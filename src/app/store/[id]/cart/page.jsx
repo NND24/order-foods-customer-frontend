@@ -14,6 +14,7 @@ import { cartService } from "@/api/cartService";
 import { useCart } from "@/context/cartContext";
 import { useOrder } from "@/context/orderContext";
 import { useVoucher } from "@/context/voucherContext";
+import { paymentService } from "@/api/paymentService";
 
 const page = () => {
   const router = useRouter();
@@ -25,6 +26,7 @@ const page = () => {
   const [storeCart, setStoreCart] = useState(null);
   const [subtotalPrice, setSubtotalPrice] = useState(0);
   const [totalDiscount, setTotalDiscount] = useState(0);
+  const [paymentMethod, setPaymentMethod] = useState("zalopay");
 
   const { user } = useAuth();
   const { refreshCart, cart } = useCart();
@@ -150,24 +152,51 @@ const page = () => {
       toast.error("Vui lòng nhập số điện thoại người nhận");
     } else {
       try {
-        const response = await cartService.completeCart({
-          storeId,
-          paymentMethod: "cash",
-          deliveryAddress: storeLocation.address,
-          customerName: storeLocation.contactName,
-          customerPhonenumber: storeLocation.contactPhonenumber,
-          detailAddress: storeLocation.detailAddress,
-          note: storeLocation.note,
-          location: [storeLocation.lon, storeLocation.lat],
-          vouchers: selectedVouchers,
-        });
+        if (paymentMethod === "zalopay") {
+          const orderInfo = {
+            storeId,
+            deliveryAddress: storeLocation.address,
+            customerName: storeLocation.contactName,
+            customerPhonenumber: storeLocation.contactPhonenumber,
+            detailAddress: storeLocation.detailAddress,
+            note: storeLocation.note,
+            location: [storeLocation.lon, storeLocation.lat],
+            vouchers: selectedVouchers,
+          };
+          localStorage.setItem("pendingOrder", JSON.stringify(orderInfo));
 
-        toast.success("Đặt thành công");
-        refreshOrder();
-        refreshCart();
-        router.push(`/orders/detail-order/${response.orderId}`);
+          const response = await paymentService.createZaloPayOrder({
+            amount: subtotalPrice - totalDiscount,
+            storeId: storeId,
+            description: "Thanh toán đơn hàng qua ZaloPay",
+          });
+
+          if (response.order_url) {
+            window.location.href = response.order_url; // Redirect sang trang ZaloPay
+          } else {
+            toast.error("Không tạo được thanh toán ZaloPay");
+          }
+        } else {
+          // Thanh toán tiền mặt như cũ
+          await cartService.completeCart({
+            storeId,
+            paymentMethod: "cash",
+            deliveryAddress: storeLocation.address,
+            customerName: storeLocation.contactName,
+            customerPhonenumber: storeLocation.contactPhonenumber,
+            detailAddress: storeLocation.detailAddress,
+            note: storeLocation.note,
+            location: [storeLocation.lon, storeLocation.lat],
+            vouchers: selectedVouchers,
+          });
+          toast.success("Đặt thành công");
+          refreshOrder();
+          refreshCart();
+          router.push(`/orders/detail-order/${response.orderId}`);
+        }
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        toast.error("Thanh toán thất bại");
       }
     }
   };
@@ -294,34 +323,43 @@ const page = () => {
                   <span className='text-[#4A4B4D] text-[18px] font-bold'>Thông tin thanh toán</span>
                 </div>
 
-                {/* <div className='flex gap-[15px] mb-[10px]'>
-                  <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
-                    <Image src='/assets/credit_card.png' alt='' layout='fill' objectFit='contain' />
-                  </div>
-                  <div className='flex flex-1 items-center justify-between'>
-                    <div className='flex items-center gap-[8px]'>
-                      <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>Thẻ</h3>
-                      <span className='text-[#a4a5a8] px-[8px] py-[6px] rounded-full bg-[#e0e0e0a3] md:text-[14px] md:px-[6px]'>
-                        Đề xuất
-                      </span>
-                    </div>
-                    <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
-                      <Image src='/assets/button.png' alt='' layout='fill' objectFit='contain' />
-                    </div>
-                  </div>
-                </div> */}
-
-                <div className='flex gap-[15px]'>
+                <div className='flex gap-[15px] mb-[10px]'>
                   <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
                     <Image src='/assets/money.png' alt='' layout='fill' objectFit='contain' />
                   </div>
-                  <div className='flex flex-1 items-center justify-between'>
+                  <div className='flex flex-1 items-center justify-between' onClick={() => setPaymentMethod("cash")}>
                     <div className='flex items-center gap-[8px]'>
                       <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>Tiền mặt</h3>
                     </div>
-                    <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
-                      <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
+                    {paymentMethod === "cash" ? (
+                      <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
+                        <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
+                      </div>
+                    ) : (
+                      <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
+                        <Image src='/assets/button.png' alt='' layout='fill' objectFit='contain' />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className='flex gap-[15px]'>
+                  <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
+                    <Image src='/assets/zalopay.png' alt='' layout='fill' objectFit='contain' />
+                  </div>
+                  <div className='flex flex-1 items-center justify-between' onClick={() => setPaymentMethod("zalopay")}>
+                    <div className='flex items-center gap-[8px]'>
+                      <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>ZaloPay</h3>
                     </div>
+                    {paymentMethod === "zalopay" ? (
+                      <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
+                        <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
+                      </div>
+                    ) : (
+                      <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
+                        <Image src='/assets/button.png' alt='' layout='fill' objectFit='contain' />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>

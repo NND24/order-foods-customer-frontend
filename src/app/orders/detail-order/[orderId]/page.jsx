@@ -141,8 +141,8 @@ const Page = () => {
               {/* Order Card */}
               <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
                 {/* Store Info + Cancel */}
-                <div className='flex justify-between items-center p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow'>
-                  <div className='flex gap-4 items-center'>
+                <div className='flex justify-between gap-3 items-center p-3 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow'>
+                  <div className='flex gap-3 items-center'>
                     <Link
                       href={`/store/${orderDetail?.store._id}`}
                       className='relative w-[70px] h-[70px] overflow-hidden rounded-lg shadow hover:scale-105 transition-transform'
@@ -155,7 +155,7 @@ const Page = () => {
                         className='rounded-lg'
                       />
                     </Link>
-                    <Link href={`/store/${orderDetail?.store._id}`} className='flex flex-col gap-1 group'>
+                    <Link href={`/store/${orderDetail?.store._id}`} className='flex flex-col flex-1 gap-1 group'>
                       <span className='text-[#333] text-xl font-bold line-clamp-1 group-hover:text-[#fc6011] transition-colors'>
                         {orderDetail?.store.name}
                       </span>
@@ -165,7 +165,7 @@ const Page = () => {
                   {orderDetail?.status === "pending" && (
                     <div className='hidden sm:block'>
                       <button
-                        className='flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105'
+                        className='flex items-center gap-2 px-4 py-2 text-nowrap rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105'
                         onClick={confirmCancelOrder}
                       >
                         <svg
@@ -185,7 +185,7 @@ const Page = () => {
                   {orderDetail?.status === "taken" && (
                     <div className='hidden sm:block'>
                       <button
-                        className='flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105'
+                        className='flex items-center gap-2 px-4 py-2 text-nowrap rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105'
                         onClick={confirmTakeOrder}
                       >
                         Xác nhận đơn hàng
@@ -267,9 +267,9 @@ const Page = () => {
                 <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
                   <p className='text-[#333] text-lg font-bold pb-4'>Giao tới</p>
                   {[
-                    { icon: "/assets/account.png", value: orderDetail?.shipInfo.contactName },
-                    { icon: "/assets/phone.png", value: orderDetail?.shipInfo.contactPhonenumber },
-                    { icon: "/assets/location.png", value: orderDetail?.shipInfo.address },
+                    { icon: "/assets/account.png", value: orderDetail?.shipInfo?.contactName },
+                    { icon: "/assets/phone.png", value: orderDetail?.shipInfo?.contactPhonenumber },
+                    { icon: "/assets/location.png", value: orderDetail?.shipInfo?.address },
                   ].map((item, idx) => (
                     <div
                       key={idx}

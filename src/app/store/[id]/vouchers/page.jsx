@@ -129,15 +129,16 @@ const Page = () => {
           {/* Content */}
           <div className='bg-white lg:w-[60%] md:w-[80%] md:mx-auto md:border md:border-gray-200 md:rounded-2xl md:shadow-md'>
             <div className='px-5 py-4'>
-              {storeVouchersList.map((voucher) => {
-                const valid = isVoucherValid(voucher);
-                const isSelected = selectedVouchers.some((v) => v._id === voucher._id);
+              {storeVouchersList.length > 0 ? (
+                storeVouchersList.map((voucher) => {
+                  const valid = isVoucherValid(voucher);
+                  const isSelected = selectedVouchers.some((v) => v._id === voucher._id);
 
-                return (
-                  <div
-                    key={voucher._id}
-                    onClick={() => valid && toggleVoucher(storeId, voucher)}
-                    className={`flex gap-4 items-start p-4 mb-3 border rounded-xl shadow-sm transition 
+                  return (
+                    <div
+                      key={voucher._id}
+                      onClick={() => valid && toggleVoucher(storeId, voucher)}
+                      className={`flex gap-4 items-start p-4 mb-3 border rounded-xl shadow-sm transition 
           ${
             valid
               ? isSelected
@@ -145,26 +146,32 @@ const Page = () => {
                 : "border-gray-200 cursor-pointer hover:shadow-md hover:scale-[1.01]"
               : "opacity-50 cursor-not-allowed border-gray-200"
           }`}
-                  >
-                    <div className='flex justify-between flex-1 items-center'>
-                      <div className='flex flex-col'>
-                        <h4 className='text-[#4A4B4D] text-lg font-semibold line-clamp-1'>{voucher.code}</h4>
-                        <p className='text-gray-500 text-sm'>{voucher.description}</p>
-                      </div>
-                      {valid && (
-                        <div className='relative w-[26px] h-[26px]'>
-                          <Image
-                            src={`/assets/${isSelected ? "button_active" : "button"}.png`}
-                            alt=''
-                            fill
-                            className='object-contain'
-                          />
+                    >
+                      <div className='flex justify-between flex-1 items-center'>
+                        <div className='flex flex-col'>
+                          <h4 className='text-[#4A4B4D] text-lg font-semibold line-clamp-1'>{voucher.code}</h4>
+                          <p className='text-gray-500 text-sm'>{voucher.description}</p>
                         </div>
-                      )}
+                        {valid && (
+                          <div className='relative w-[26px] h-[26px]'>
+                            <Image
+                              src={`/assets/${isSelected ? "button_active" : "button"}.png`}
+                              alt=''
+                              fill
+                              className='object-contain'
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })
+              ) : (
+                <div className='flex flex-col items-center text-center py-10'>
+                  <Image src='/assets/no_voucher.png' alt='empty cart' width={150} height={150} />
+                  <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Quán hiện không có ưu đãi nào</h3>
+                </div>
+              )}
             </div>
           </div>
 
