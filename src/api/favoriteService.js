@@ -1,7 +1,7 @@
 import { config, instance } from "@/utils/axiosConfig";
 
 const getUserFavorite = async () => {
-  const response = await instance.get(`/favorite/`, config());
+  const response = await instance.get(`/favorite`, config());
   if (response.data) {
     return response.data;
   }

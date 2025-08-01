@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 
 const CartItem = ({ cartItem }) => {
   const [quantity, setQuantity] = useState(0);

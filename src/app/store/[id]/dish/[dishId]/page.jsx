@@ -8,7 +8,7 @@ import Header from "@/components/header/Header";
 import Heading from "@/components/Heading";
 import ToppingItemCheckBox from "@/components/dish/ToppingItemCheckBox";
 import ToppingItemRadio from "@/components/dish/ToppingItemRadio";
-import { useCart } from "@/context/cartContext";
+import { useCart } from "@/context/CartContext";
 import { dishService } from "@/api/dishService";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";

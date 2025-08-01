@@ -2,8 +2,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/cartContext";
-import { useOrder } from "@/context/orderContext";
+import { useCart } from "@/context/CartContext";
+import { useOrder } from "@/context/OrderContext";
 import { toast } from "react-toastify";
 
 export default function PaymentSuccessPage() {
@@ -25,7 +25,7 @@ export default function PaymentSuccessPage() {
       try {
         const response = await cartService.completeCart({
           ...orderData,
-          paymentMethod: "zalopay",
+          paymentMethod: "VNPay",
         });
         toast.success("Thanh toán thành công!");
         refreshOrder();
