@@ -11,8 +11,8 @@ import { haversineDistance } from "@/utils/functions";
 import OrderSummary from "@/components/order/OrderSummary";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/cartContext";
-import { useOrder } from "@/context/orderContext";
+import { useCart } from "@/context/CartContext";
+import { useOrder } from "@/context/OrderContext";
 import { useVoucher } from "@/context/voucherContext";
 import { paymentService } from "@/api/paymentService";
 
@@ -26,7 +26,7 @@ const page = () => {
   const [storeCart, setStoreCart] = useState(null);
   const [subtotalPrice, setSubtotalPrice] = useState(0);
   const [totalDiscount, setTotalDiscount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState("zalopay");
+  const [paymentMethod, setPaymentMethod] = useState("VNPay");
 
   const { user } = useAuth();
   const { refreshCart, cart } = useCart();
@@ -152,44 +152,38 @@ const page = () => {
       toast.error("Vui lòng nhập số điện thoại người nhận");
     } else {
       try {
-        if (paymentMethod === "zalopay") {
-          const orderInfo = {
-            storeId,
-            deliveryAddress: storeLocation.address,
-            customerName: storeLocation.contactName,
-            customerPhonenumber: storeLocation.contactPhonenumber,
-            detailAddress: storeLocation.detailAddress,
-            note: storeLocation.note,
-            location: [storeLocation.lon, storeLocation.lat],
-            vouchers: selectedVouchers,
-          };
-          localStorage.setItem("pendingOrder", JSON.stringify(orderInfo));
-
-          const response = await paymentService.createZaloPayOrder({
-            amount: subtotalPrice - totalDiscount,
-            storeId: storeId,
-            description: "Thanh toán đơn hàng qua ZaloPay",
-          });
-
-          if (response.order_url) {
-            window.location.href = response.order_url; // Redirect sang trang ZaloPay
-          } else {
-            toast.error("Không tạo được thanh toán ZaloPay");
+        const response = await cartService.completeCart({
+          storeId,
+          paymentMethod: "cash",
+          deliveryAddress: storeLocation.address,
+          customerName: storeLocation.contactName,
+          customerPhonenumber: storeLocation.contactPhonenumber,
+          detailAddress: storeLocation.detailAddress,
+          note: storeLocation.note,
+          location: [storeLocation.lon, storeLocation.lat],
+          vouchers: selectedVouchers,
+        });
+        toast.success("Đặt thành công");
+        if (paymentMethod === "VNPay") {
+          console.log(response)
+          const orderId = response.orderId
+          if (orderId) {
+            const redirectUrlRepsonse = await paymentService.createVNPayOrder(orderId)
+            console.log(redirectUrlRepsonse)
+            if (redirectUrlRepsonse.paymentUrl) {
+              router.push(redirectUrlRepsonse.paymentUrl)
+              // refreshOrder();
+              // refreshCart();
+            }
+            else {
+              toast.error("Lỗi phương thức thanh toán online")
+            }
+          }
+          else {
+            toast.error("OrderId không thể truy vấn")
           }
         } else {
           // Thanh toán tiền mặt như cũ
-          await cartService.completeCart({
-            storeId,
-            paymentMethod: "cash",
-            deliveryAddress: storeLocation.address,
-            customerName: storeLocation.contactName,
-            customerPhonenumber: storeLocation.contactPhonenumber,
-            detailAddress: storeLocation.detailAddress,
-            note: storeLocation.note,
-            location: [storeLocation.lon, storeLocation.lat],
-            vouchers: selectedVouchers,
-          });
-          toast.success("Đặt thành công");
           refreshOrder();
           refreshCart();
           router.push(`/orders/detail-order/${response.orderId}`);
@@ -345,13 +339,13 @@ const page = () => {
 
                 <div className='flex gap-[15px]'>
                   <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px]'>
-                    <Image src='/assets/zalopay.png' alt='' layout='fill' objectFit='contain' />
+                    <Image src='/assets/vnpay.jpg' alt='' layout='fill' objectFit='contain' />
                   </div>
-                  <div className='flex flex-1 items-center justify-between' onClick={() => setPaymentMethod("zalopay")}>
+                  <div className='flex flex-1 items-center justify-between' onClick={() => setPaymentMethod("VNPay")}>
                     <div className='flex items-center gap-[8px]'>
-                      <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>ZaloPay</h3>
+                      <h3 className='text-[#4A4B4D] text-[18px] font-bold md:text-[16px]'>VNPay</h3>
                     </div>
-                    {paymentMethod === "zalopay" ? (
+                    {paymentMethod === "VNPay" ? (
                       <div className='relative w-[30px] pt-[30px] md:w-[20px] md:pt-[20px] cursor-pointer'>
                         <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
                       </div>

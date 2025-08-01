@@ -1,7 +1,7 @@
 import { config, instance } from "@/utils/axiosConfig";
 
 const getUserCart = async () => {
-  const response = await instance.get(`/cart/`, config());
+  const response = await instance.get(`/cart`, config());
   if (response.data) {
     return response.data;
   }

@@ -1,9 +1,9 @@
 "use client";
 import { useAuth } from "@/context/authContext";
-import { useCart } from "@/context/cartContext";
-import { useFavorite } from "@/context/favoriteContext";
-import { useOrder } from "@/context/orderContext";
-import { useSocket } from "@/context/socketContext";
+import { useCart } from "@/context/CartContext";
+import { useFavorite } from "@/context/FavoriteContext";
+import { useOrder } from "@/context/OrderContext";
+import { useSocket } from "@/context/SocketContext";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
