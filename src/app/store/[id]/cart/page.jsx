@@ -11,8 +11,8 @@ import { haversineDistance } from "@/utils/functions";
 import OrderSummary from "@/components/order/OrderSummary";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/CartContext";
-import { useOrder } from "@/context/OrderContext";
+import { useCart } from "@/context/cartContext";
+import { useOrder } from "@/context/orderContext";
 import { useVoucher } from "@/context/voucherContext";
 import { paymentService } from "@/api/paymentService";
 
@@ -165,22 +165,20 @@ const page = () => {
         });
         toast.success("Đặt thành công");
         if (paymentMethod === "VNPay") {
-          console.log(response)
-          const orderId = response.orderId
+          console.log(response);
+          const orderId = response.orderId;
           if (orderId) {
-            const redirectUrlRepsonse = await paymentService.createVNPayOrder(orderId)
-            console.log(redirectUrlRepsonse)
+            const redirectUrlRepsonse = await paymentService.createVNPayOrder(orderId);
+            console.log(redirectUrlRepsonse);
             if (redirectUrlRepsonse.paymentUrl) {
-              router.push(redirectUrlRepsonse.paymentUrl)
+              router.push(redirectUrlRepsonse.paymentUrl);
               // refreshOrder();
               // refreshCart();
+            } else {
+              toast.error("Lỗi phương thức thanh toán online");
             }
-            else {
-              toast.error("Lỗi phương thức thanh toán online")
-            }
-          }
-          else {
-            toast.error("OrderId không thể truy vấn")
+          } else {
+            toast.error("OrderId không thể truy vấn");
           }
         } else {
           // Thanh toán tiền mặt như cũ

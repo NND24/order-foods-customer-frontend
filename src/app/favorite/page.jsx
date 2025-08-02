@@ -7,7 +7,7 @@ import Header from "@/components/header/Header";
 import MobileHeader from "@/components/header/MobileHeader";
 import Heading from "@/components/Heading";
 import NavBar from "@/components/header/NavBar";
-import { useFavorite } from "@/context/FavoriteContext";
+import { useFavorite } from "@/context/favoriteContext";
 import { favoriteService } from "@/api/favoriteService";
 import FavoriteItem from "@/components/favorite/FavoriteItem";
 import { Atom } from "react-loading-indicators";

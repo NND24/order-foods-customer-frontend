@@ -11,15 +11,14 @@ import { useAuth } from "@/context/authContext";
 import { Atom } from "react-loading-indicators";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { useOrder } from "@/context/OrderContext";
-import { useCart } from "@/context/CartContext";
-import { useSearchParams } from 'next/navigation'
+import { useOrder } from "@/context/orderContext";
+import { useCart } from "@/context/cartContext";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams()
-  const payment = searchParams.get('payment')
-
+  const searchParams = useSearchParams();
+  const payment = searchParams.get("payment");
 
   const { orderId } = useParams();
 
@@ -40,14 +39,14 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (payment === 'success') {
-      toast.success("Thanh toán thành công")
+    if (payment === "success") {
+      toast.success("Thanh toán thành công");
       // Remove `payment` param from URL without reload
-      const url = new URL(window.location.href)
-      url.searchParams.delete('payment')
-      window.history.replaceState({}, '', url)
+      const url = new URL(window.location.href);
+      url.searchParams.delete("payment");
+      window.history.replaceState({}, "", url);
     }
-  }, [payment])
+  }, [payment]);
 
   useEffect(() => {
     getOrderDetail();

@@ -5,15 +5,15 @@ import "react-toastify/dist/ReactToastify.css";
 import { HelmetProvider } from "react-helmet-async";
 import { ForgotPassEmailProvider } from "@/context/forgotPassEmailContext";
 import { ProvinceProvider } from "@/context/provinceContext";
-import { CartProvider } from "@/context/CartContext";
-import { OrderProvider } from "@/context/OrderContext";
-import { FavoriteProvider } from "@/context/FavoriteContext";
-import { SocketProvider } from "@/context/SocketContext";
+import { OrderProvider } from "@/context/orderContext";
+import { FavoriteProvider } from "@/context/favoriteContext";
+import { SocketProvider } from "@/context/socketContext";
 import { AuthProvider, useAuth } from "@/context/authContext";
 import { Atom } from "react-loading-indicators";
 import { StoreLocationProvider } from "@/context/storeLocationContext";
 import { LocationProvider } from "@/context/locationContext";
 import { VoucherProvider } from "@/context/voucherContext";
+import { CartProvider } from "@/context/cartContext";
 
 function AppProviders({ children }) {
   const { loading: authLoading } = useAuth();

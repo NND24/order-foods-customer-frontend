@@ -3,8 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams, useSearchParams } from "next/navigation";
 import Pagination from "@/components/Pagination";
-import { useCart } from "@/context/CartContext";
-import { useFavorite } from "@/context/FavoriteContext";
+import { useCart } from "@/context/cartContext";
+import { useFavorite } from "@/context/favoriteContext";
 import ListDish from "@/components/dish/ListDish";
 import Header from "@/components/header/Header";
 import Heading from "@/components/Heading";
@@ -12,7 +12,7 @@ import ListDishBig from "@/components/dish/ListDishBig";
 import RatingItem from "@/components/rating/RatingItem";
 import RatingBar from "@/components/rating/RatingBar";
 import MostRatingSlider from "@/components/rating/MostRatingSlider";
-import { useSocket } from "@/context/SocketContext";
+import { useSocket } from "@/context/socketContext";
 import { React, useEffect, useState } from "react";
 import { storeService } from "@/api/storeService";
 import { dishService } from "@/api/dishService";
@@ -296,15 +296,15 @@ const page = () => {
                   <span className='text-[#4A4B4D] text-xl font-bold truncate'>{storeInfo?.name}</span>
 
                   {/* Categories */}
-                  <div className='flex flex-wrap gap-2 items-center mt-1 text-sm text-gray-500'>
+                  <div className='mt-1 text-sm text-gray-500 line-clamp-2'>
                     {storeInfo?.storeCategory &&
                       storeInfo?.storeCategory.map((category, index) => (
-                        <div key={category._id || index} className='flex items-center gap-2'>
+                        <div key={category._id || index} className='inline'>
                           <Link href={`/search?category=${category._id}`} className='hover:text-[#fc6011] transition'>
                             {category.name}
                           </Link>
                           {index !== storeInfo.storeCategory.length - 1 && (
-                            <span className='inline-block w-1 h-1 bg-[#fc6011] rounded-full'></span>
+                            <span className='inline-block w-1 h-1 my-[3px] mx-[5px] bg-[#fc6011] rounded-full'></span>
                           )}
                         </div>
                       ))}
