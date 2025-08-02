@@ -52,13 +52,18 @@ const FavoriteItem = ({ store }) => {
         <h4 className='text-gray-800 text-lg font-semibold line-clamp-1'>{store.name}</h4>
 
         {/* Danh mục */}
-        <div className='text-gray-600 text-sm mb-2 truncate'>
-          {store.storeCategory.map((category, index) => (
-            <span key={category._id}>
-              {category.name}
-              {index !== store.storeCategory.length - 1 && <span className='text-orange-500'> • </span>}
-            </span>
-          ))}
+        <div className='mt-1 text-sm text-gray-500 line-clamp-1'>
+          {store.storeCategory &&
+            store.storeCategory.map((category, index) => (
+              <div key={category._id || index} className='inline'>
+                <Link href={`/search?category=${category._id}`} className='hover:text-[#fc6011] transition'>
+                  {category.name}
+                </Link>
+                {index !== store.storeCategory.length - 1 && (
+                  <span className='inline-block w-1 h-1 my-[3px] mx-[5px] bg-[#fc6011] rounded-full'></span>
+                )}
+              </div>
+            ))}
         </div>
 
         {/* Rating */}

@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import moment from "moment";
 import StarRating from "./StarRating.jsx";
 import { toast } from "react-toastify";
@@ -110,13 +110,13 @@ const RatingItem = ({ rating, userId, refetchAllStoreRating, refetchPaginationRa
         )}
       </div>
 
-      {/* <div className='px-[20px] py-[15px] bg-[#e6e6e6] rounded-[8px]'>
-          <div className='flex items-center justify-between'>
-            <p className='text-[#000] font-bold md:text-[14px]'>Phản hồi từ quán</p>
-            <p className='text-[#636464] text-[15px] md:text-[13px]'>6 ngày trước</p>
-          </div>
-          <p className='text-[#636464] md:text-[14px]'>Cảm ơn bạn đã đánh giá</p>
-        </div> */}
+      <div className='px-[20px] py-[15px] bg-[#e6e6e6] rounded-[8px]'>
+        <div className='flex items-center justify-between'>
+          <p className='text-[#000] font-bold md:text-[14px]'>Phản hồi từ quán</p>
+          {/* <p className='text-[#636464] text-[15px] md:text-[13px]'>6 ngày trước</p> */}
+        </div>
+        <p className='text-[#636464] md:text-[14px]'>{rating.storeReply}</p>
+      </div>
     </div>
   );
 };
