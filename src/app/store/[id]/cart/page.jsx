@@ -152,24 +152,20 @@ const page = () => {
       toast.error("Vui lòng nhập số điện thoại người nhận");
     } else {
       try {
-        const response = await cartService.completeCart({
-          storeId,
-          paymentMethod: "cash",
-          deliveryAddress: storeLocation.address,
-          customerName: storeLocation.contactName,
-          customerPhonenumber: storeLocation.contactPhonenumber,
-          detailAddress: storeLocation.detailAddress,
-          note: storeLocation.note,
-          location: [storeLocation.lon, storeLocation.lat],
-          vouchers: selectedVouchers,
-        });
-        toast.success("Đặt thành công");
         if (paymentMethod === "VNPay") {
-          console.log(response);
-          const orderId = response.orderId;
-          if (orderId) {
-            const redirectUrlRepsonse = await paymentService.createVNPayOrder(orderId);
-            console.log(redirectUrlRepsonse);
+          console.log(detailCart)
+          if (detailCart && detailCart.cartId) {
+            const redirectUrlRepsonse = await paymentService.createVNPayOrder(detailCart.cartId, {
+              paymentMethod: "vnpay",
+              deliveryAddress: storeLocation.address,
+              customerName: storeLocation.contactName,
+              customerPhonenumber: storeLocation.contactPhonenumber,
+              detailAddress: storeLocation.detailAddress,
+              note: storeLocation.note,
+              location: [storeLocation.lon, storeLocation.lat],
+              vouchers: selectedVouchers,
+            })
+            console.log(redirectUrlRepsonse)
             if (redirectUrlRepsonse.paymentUrl) {
               router.push(redirectUrlRepsonse.paymentUrl);
               // refreshOrder();
@@ -177,14 +173,35 @@ const page = () => {
             } else {
               toast.error("Lỗi phương thức thanh toán online");
             }
-          } else {
-            toast.error("OrderId không thể truy vấn");
+            else {
+              toast.error("Lỗi phương thức thanh toán online")
+            }
+          }
+          else {
+            toast.error("CartId không thể truy vấn")
           }
         } else {
           // Thanh toán tiền mặt như cũ
-          refreshOrder();
-          refreshCart();
-          router.push(`/orders/detail-order/${response.orderId}`);
+          const response = await cartService.completeCart({
+            storeId,
+            paymentMethod: "cash",
+            deliveryAddress: storeLocation.address,
+            customerName: storeLocation.contactName,
+            customerPhonenumber: storeLocation.contactPhonenumber,
+            detailAddress: storeLocation.detailAddress,
+            note: storeLocation.note,
+            location: [storeLocation.lon, storeLocation.lat],
+            vouchers: selectedVouchers,
+          });
+          if (response && response.orderId) {
+            toast.success("Đặt thành công");
+            refreshOrder();
+            refreshCart();
+            router.push(`/orders/detail-order/${response.orderId}`);
+          }
+          else {
+            toast.error("Lỗi phương thức thanh toán tiền mặt")
+          }
         }
       } catch (error) {
         console.error(error);

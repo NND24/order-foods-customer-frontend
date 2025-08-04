@@ -4,7 +4,7 @@ import Header from "@/components/header/Header";
 import MobileHeader from "@/components/header/MobileHeader";
 import Heading from "@/components/Heading";
 import NavBar from "@/components/header/NavBar";
-import { useOrder } from "@/context/orderContext";
+import { useOrder } from "@/context/OrderContext";
 import OrderCard from "@/components/order/OrderCard";
 import { Atom } from "react-loading-indicators";
 import Image from "next/image";
@@ -13,7 +13,7 @@ const Page = () => {
   const [currentOrders, setCurrentOrders] = useState([]);
   const [doneOrders, setDoneOrders] = useState([]);
   const [activeTab, setActiveTab] = useState("current"); // "current" | "history"
-
+  
   const { order, loading } = useOrder();
 
   useEffect(() => {

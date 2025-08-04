@@ -17,8 +17,8 @@ import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const payment = searchParams.get("payment");
+  const searchParams = useSearchParams()
+  const paymentStatus = searchParams.get('status')
 
   const { orderId } = useParams();
 
@@ -39,17 +39,19 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (payment === "success") {
-      toast.success("Thanh toán thành công");
+    if (paymentStatus === 'success') {
+      toast.success("Thanh toán thành công")
       // Remove `payment` param from URL without reload
-      const url = new URL(window.location.href);
-      url.searchParams.delete("payment");
-      window.history.replaceState({}, "", url);
+      const url = new URL(window.location.href)
+      url.searchParams.delete('status')
+      window.history.replaceState({}, '', url)
     }
-  }, [payment]);
+  }, [paymentStatus])
+
 
   useEffect(() => {
     getOrderDetail();
+    console.log(orderDetail)
   }, []);
 
   useEffect(() => {
@@ -310,11 +312,12 @@ const Page = () => {
                 <div className='h-[6px] w-full bg-gray-100 my-4 rounded-full'></div>
 
                 {/* Payment Info */}
-                <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition'>
+                <div className='bg-white flex flex-col p-5 border border-gray-100 rounded-xl shadow-md md:p-6 hover:shadow-lg transition space-y-4'>
                   <div className='pb-5 flex items-center justify-between'>
                     <span className='text-[#333] text-lg font-bold'>Thông tin thanh toán</span>
                   </div>
 
+                  {/* Tiền mặt */}
                   <div className='flex gap-4'>
                     <div className='relative w-7 pt-7'>
                       <Image src='/assets/money.png' alt='' layout='fill' objectFit='contain' />
@@ -322,7 +325,38 @@ const Page = () => {
                     <div className='flex flex-1 items-center justify-between'>
                       <h3 className='text-[#333] text-lg font-bold'>Tiền mặt</h3>
                       <div className='relative w-7 pt-7'>
-                        <Image src='/assets/button_active.png' alt='' layout='fill' objectFit='contain' />
+                        <Image
+                          src={
+                            orderDetail?.paymentMethod !== 'vnpay' || orderDetail?.paymentStatus !== 'paid'
+                              ? '/assets/button_active.png'
+                              : '/assets/button.png'
+                          }
+                          alt=''
+                          layout='fill'
+                          objectFit='contain'
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* VNPay */}
+                  <div className='flex gap-4'>
+                    <div className='relative w-7 pt-7'>
+                      <Image src='/assets/vnpay.jpg' alt='' layout='fill' objectFit='contain' />
+                    </div>
+                    <div className='flex flex-1 items-center justify-between'>
+                      <h3 className='text-[#333] text-lg font-bold'>VNPay</h3>
+                      <div className='relative w-7 pt-7'>
+                        <Image
+                          src={
+                            orderDetail?.paymentMethod === 'vnpay' && orderDetail?.paymentStatus === 'paid'
+                              ? '/assets/button_active.png'
+                              : '/assets/button.png'
+                          }
+                          alt=''
+                          layout='fill'
+                          objectFit='contain'
+                        />
                       </div>
                     </div>
                   </div>

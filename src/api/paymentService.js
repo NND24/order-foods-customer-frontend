@@ -1,9 +1,10 @@
 import { config, instance } from "@/utils/axiosConfig";
 
-const createVNPayOrder = async (orderId) => {
-  const response = await instance.get(
+const createVNPayOrder = async (orderId, data) => {
+  const response = await instance.post(
     `/payment/vnpay/qrcode/${orderId}`,
-    config() // this should include Authorization header
+    data,
+    config()
   );
 
   if (response.data) {
