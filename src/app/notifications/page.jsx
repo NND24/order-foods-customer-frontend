@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { useSocket } from "@/context/socketContext";
+import { useSocket } from "@/context/SocketContext";
 import Header from "@/components/header/Header";
 import MobileHeader from "@/components/header/MobileHeader";
 import Heading from "@/components/Heading";
