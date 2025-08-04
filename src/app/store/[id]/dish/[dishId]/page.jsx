@@ -1,14 +1,14 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import Header from "@/components/header/Header";
 import Heading from "@/components/Heading";
 import ToppingItemCheckBox from "@/components/dish/ToppingItemCheckBox";
 import ToppingItemRadio from "@/components/dish/ToppingItemRadio";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cartContext";
 import { dishService } from "@/api/dishService";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";

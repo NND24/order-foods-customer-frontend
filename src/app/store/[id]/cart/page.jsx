@@ -11,8 +11,8 @@ import { haversineDistance } from "@/utils/functions";
 import OrderSummary from "@/components/order/OrderSummary";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/CartContext";
-import { useOrder } from "@/context/OrderContext";
+import { useCart } from "@/context/cartContext";
+import { useOrder } from "@/context/orderContext";
 import { useVoucher } from "@/context/voucherContext";
 import { paymentService } from "@/api/paymentService";
 
@@ -167,9 +167,11 @@ const page = () => {
             })
             console.log(redirectUrlRepsonse)
             if (redirectUrlRepsonse.paymentUrl) {
-              router.push(redirectUrlRepsonse.paymentUrl)
+              router.push(redirectUrlRepsonse.paymentUrl);
               // refreshOrder();
               // refreshCart();
+            } else {
+              toast.error("Lỗi phương thức thanh toán online");
             }
             else {
               toast.error("Lỗi phương thức thanh toán online")

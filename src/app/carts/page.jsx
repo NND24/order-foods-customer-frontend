@@ -9,7 +9,7 @@ import Heading from "@/components/Heading";
 import NavBar from "@/components/header/NavBar";
 import CartItem from "@/components/cart/CartItem";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cartContext";
 import { Atom } from "react-loading-indicators";
 
 const page = () => {

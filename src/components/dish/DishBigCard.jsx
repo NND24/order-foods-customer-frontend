@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cartContext";
 import { cartService } from "@/api/cartService";
 import { useAuth } from "@/context/authContext";
 

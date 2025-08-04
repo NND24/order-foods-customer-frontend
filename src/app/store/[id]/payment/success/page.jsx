@@ -2,8 +2,8 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { cartService } from "@/api/cartService";
-import { useCart } from "@/context/CartContext";
-import { useOrder } from "@/context/OrderContext";
+import { useCart } from "@/context/cartContext";
+import { useOrder } from "@/context/orderContext";
 import { toast } from "react-toastify";
 
 export default function PaymentSuccessPage() {

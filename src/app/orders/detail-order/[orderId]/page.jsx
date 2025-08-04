@@ -11,15 +11,14 @@ import { useAuth } from "@/context/authContext";
 import { Atom } from "react-loading-indicators";
 import Swal from "sweetalert2";
 import { toast } from "react-toastify";
-import { useOrder } from "@/context/OrderContext";
-import { useCart } from "@/context/CartContext";
-import { useSearchParams } from 'next/navigation'
+import { useOrder } from "@/context/orderContext";
+import { useCart } from "@/context/cartContext";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
   const searchParams = useSearchParams()
   const paymentStatus = searchParams.get('status')
-
 
   const { orderId } = useParams();
 
@@ -48,6 +47,7 @@ const Page = () => {
       window.history.replaceState({}, '', url)
     }
   }, [paymentStatus])
+
 
   useEffect(() => {
     getOrderDetail();
