@@ -9,7 +9,7 @@ import { useFormik } from "formik";
 import Header from "@/components/header/Header";
 import Heading from "@/components/Heading";
 import NavBar from "@/components/header/NavBar";
-import { useSocket } from "@/context/SocketContext";
+import { useSocket } from "@/context/socketContext";
 import { useAuth } from "@/context/authContext";
 import { uploadService } from "@/api/uploadService";
 import { userService } from "@/api/userService";
