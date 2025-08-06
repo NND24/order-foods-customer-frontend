@@ -12,6 +12,7 @@ import { useCart } from "@/context/cartContext";
 import { dishService } from "@/api/dishService";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
+import { Atom } from "react-loading-indicators";
 
 const page = () => {
   const { id: storeId, dishId } = useParams();
@@ -25,6 +26,7 @@ const page = () => {
   const [toppings, setToppings] = useState([]);
   const [toppingsValue, setToppingsValue] = useState([]);
   const [price, setPrice] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   const { cart, refreshCart } = useCart();
   const { user } = useAuth();
@@ -33,7 +35,10 @@ const page = () => {
     try {
       const response = await dishService.getDish(dishId);
       setDishInfo(response.data);
-    } catch (error) {}
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -242,6 +247,14 @@ const page = () => {
       toast.error("Vui lòng đăng nhập để tiếp tục đặt hàng!");
     }
   };
+
+  if (loading) {
+    return (
+      <div className='w-full h-screen flex items-center justify-center'>
+        <Atom color='#fc6011' size='medium' text='' textColor='' />
+      </div>
+    );
+  }
 
   return (
     <>

@@ -1,9 +1,9 @@
 "use client";
 import { cartService } from "@/api/cartService";
-import { voucherService } from "@/api/voucerService";
+import { voucherService } from "@/api/voucherService";
 import Header from "@/components/header/Header";
 import Heading from "@/components/Heading";
-import { useCart } from "@/context/CartContext";
+import { useCart } from "@/context/cartContext";
 import { useVoucher } from "@/context/voucherContext";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
@@ -29,7 +29,7 @@ const Page = () => {
     setLoading(true);
     try {
       const response = await voucherService.getVouchersByStore(storeId);
-      setStoreVouchersList(response);
+      setStoreVouchersList(response.data);
     } catch (error) {
       console.error(error);
     } finally {

@@ -15,6 +15,7 @@ import { useCart } from "@/context/cartContext";
 import { useOrder } from "@/context/orderContext";
 import { useVoucher } from "@/context/voucherContext";
 import { paymentService } from "@/api/paymentService";
+import { shippingFeeService } from "@/api/shippingFeeService";
 
 const page = () => {
   const router = useRouter();
@@ -119,22 +120,16 @@ const page = () => {
         detailCart?.store?.address?.lon
       ) {
         try {
-          // Gọi API tính phí ship
-          const data = {
-            customerLocation: {
-              lat: storeLocation.lat,
-              lon: storeLocation.lon,
-            },
-            orderSubtotal: subtotalPrice,
-          };
-
-          const res = await shippingFeeService.calculateShippingFee(storeId, data);
-          if (res?.shippingFee) {
-            setShippingFee(res.shippingFee);
+          const res = await shippingFeeService.calculateShippingFee(storeId, {
+            distanceKm: haversineDistance(
+              [storeLocation.lat, storeLocation.lon],
+              [detailCart?.store.address.lat, detailCart?.store.address.lon]
+            ).toFixed(2),
+          });
+          if (res?.fee) {
+            setShippingFee(res.fee);
           }
-        } catch (error) {
-          console.error("Lỗi khi tính phí ship:", error);
-        }
+        } catch (error) {setShippingFee(0);}
       }
     };
 
