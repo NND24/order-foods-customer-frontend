@@ -8,7 +8,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import * as yup from "yup";
 import { useFormik } from "formik";
-import { useSocket } from "@/context/SocketContext";
+import { useSocket } from "@/context/socketContext";
 import { authService } from "@/api/authService";
 
 const page = () => {
