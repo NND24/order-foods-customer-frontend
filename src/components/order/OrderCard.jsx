@@ -28,14 +28,34 @@ const OrderCard = ({ order }) => {
       href={`/orders/detail-order/${order._id}`}
       className='flex gap-4 p-4 bg-white border border-gray-200 rounded-2xl shadow-md hover:shadow-lg hover:-translate-y-1 transition-all duration-300'
     >
-      {/* Hình ảnh cửa hàng */}
+      {/* Ảnh món ăn động theo số lượng món */}
       <div className='relative w-32 h-32 rounded-xl overflow-hidden'>
-        <Image
-          src={order.store.avatar.url || "/placeholder.png"}
-          alt={order.store.name}
-          fill
-          className='object-cover'
-        />
+        {order.items.slice(0, 4).map((item, index) => {
+          const total = order.items.length;
+          const imageUrl = item.dish?.image?.url || "/assets/logo_app.png";
+
+          let className = "absolute w-full h-full"; // default for 1
+          if (total === 2) {
+            className = `absolute w-24 h-24 rounded-md ${
+              index === 0 ? "top-0 left-0 z-0" : "bottom-0 right-0 z-10 shadow-md"
+            }`;
+          } else if (total === 3) {
+            if (index === 0) {
+              className = "absolute top-0 left-0 w-full h-1/2";
+            } else {
+              className = `absolute bottom-0 w-1/2 h-1/2 ${index === 1 ? "left-0" : "right-0"}`;
+            }
+          } else if (total >= 4) {
+            const positions = ["top-0 left-0", "top-0 right-0", "bottom-0 left-0", "bottom-0 right-0"];
+            className = `absolute w-1/2 h-1/2 ${positions[index]}`;
+          }
+
+          return (
+            <div key={index} className={className}>
+              <Image src={imageUrl} alt={item.dishName} fill className='object-cover rounded-sm' />
+            </div>
+          );
+        })}
       </div>
 
       {/* Nội dung */}

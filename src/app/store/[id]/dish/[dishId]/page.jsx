@@ -73,13 +73,13 @@ const page = () => {
 
     // Correct logic
     if (inputValue > 50) {
-      //toast.info("Số lượng tối đa là 50. Đã tự động điều chỉnh.");
+      toast.info("Số lượng tối đa là 50. Đã tự động điều chỉnh.");
       inputValue = 50;
     }
 
     // Negative Testing
     if (inputValue < 0) {
-      //toast.info("Số lượng tối thiểu là 0. Đã tự động điều chỉnh.");
+      toast.info("Số lượng tối thiểu là 0. Đã tự động điều chỉnh.");
       inputValue = 0;
     }
 
@@ -144,12 +144,12 @@ const page = () => {
     let newQuantity = quantity + qnt;
 
     if (newQuantity > 50) {
-      //toast.info("Số lượng tối đa là 50. Đã tự động điều chỉnh.");
+      toast.info("Số lượng tối đa là 50. Đã tự động điều chỉnh.");
       newQuantity = 50;
     }
 
     if (newQuantity < 0) {
-      //toast.info("Số lượng tối thiểu là 0. Đã tự động điều chỉnh.");
+      toast.info("Số lượng tối thiểu là 0. Đã tự động điều chỉnh.");
       newQuantity = 0;
     }
 

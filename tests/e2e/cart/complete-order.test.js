@@ -25,12 +25,7 @@ test.describe("Main success case (CEG)", () => {
     await page.goto("http://localhost:3000/store/67c6e409f1c07122e88619d6");
 
     // Step 3: Add Dish with all toppings to cart
-    await page.getByRole("link", { name: "Combo Burger Tôm 01 Burger Tô" }).nth(1).click();
-    await page
-      .locator("div")
-      .filter({ hasText: /^Sốt K-Chicken \(1 hủ\)$/ })
-      .locator("img")
-      .click();
+    await page.getByRole("link", { name: "Value Burger Tôm" }).nth(1).click();
     await page
       .locator("div")
       .filter({ hasText: /^Sốt Đậu \(1 hủ\)$/ })
@@ -39,16 +34,6 @@ test.describe("Main success case (CEG)", () => {
     await page
       .locator("div")
       .filter({ hasText: /^Sốt H&S \(1 hủ\)$/ })
-      .locator("img")
-      .click();
-    await page
-      .locator("div")
-      .filter({ hasText: /^Phô mai \(1 miếng\)$/ })
-      .locator("img")
-      .click();
-    await page
-      .locator("div")
-      .filter({ hasText: /^Trứng ốp la$/ })
       .locator("img")
       .click();
     await page.locator("img:nth-child(3)").click();
