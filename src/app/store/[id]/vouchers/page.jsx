@@ -9,6 +9,7 @@ import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { Atom } from "react-loading-indicators";
+import Swal from "sweetalert2";
 
 const Page = () => {
   const { id: storeId } = useParams();
@@ -133,11 +134,44 @@ const Page = () => {
                 storeVouchersList.map((voucher) => {
                   const valid = isVoucherValid(voucher);
                   const isSelected = selectedVouchers.some((v) => v._id === voucher._id);
+                  const hasNonStackable = selectedVouchers.some((v) => !v.isStackable);
 
                   return (
                     <div
                       key={voucher._id}
-                      onClick={() => valid && toggleVoucher(storeId, voucher)}
+                      onClick={() => {
+                        if (!valid) return;
+
+                        // Nếu voucher này không stack được và đã chọn voucher khác -> chặn
+                        if (!voucher.isStackable && selectedVouchers.length > 0 && !isSelected) {
+                          Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            icon: "warning",
+                            title: "Voucher này không thể dùng chung với voucher khác",
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                          });
+                          return;
+                        }
+
+                        // Nếu đã chọn 1 voucher non-stackable -> chặn chọn voucher mới, trừ khi bỏ chọn chính nó
+                        if (hasNonStackable && !isSelected) {
+                          Swal.fire({
+                            toast: true,
+                            position: "top-end",
+                            icon: "warning",
+                            title: "Bạn đã chọn voucher không thể dùng chung",
+                            showConfirmButton: false,
+                            timer: 2000,
+                            timerProgressBar: true,
+                          });
+                          return;
+                        }
+
+                        toggleVoucher(storeId, voucher);
+                      }}
                       className={`flex gap-4 items-start p-4 mb-3 border rounded-xl shadow-sm transition 
           ${
             valid

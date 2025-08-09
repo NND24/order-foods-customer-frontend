@@ -19,7 +19,6 @@ test.describe("Store Status (DT)", () => {
     await page.getByRole("textbox", { name: "Nhập mật khẩu của bạn" }).click();
     await page.getByRole("textbox", { name: "Nhập mật khẩu của bạn" }).fill(LEGIT.password);
     await page.getByRole("button", { name: "Đăng nhập" }).click();
-    await page.getByRole("button", { name: "close" }).click();
 
     // Step 2: Click 'Tasty Bites'
     await page.goto("http://localhost:3000/store/67c6e409f1c07122e88619d6");
@@ -58,7 +57,6 @@ test.describe("Store Status (DT)", () => {
     await page.getByRole("textbox", { name: "Nhập mật khẩu của bạn" }).click();
     await page.getByRole("textbox", { name: "Nhập mật khẩu của bạn" }).fill(LEGIT.password);
     await page.getByRole("button", { name: "Đăng nhập" }).click();
-    await page.getByRole("button", { name: "close" }).click();
 
     // Step 2: Click 'Tasty Bites'
     await page.goto("http://localhost:3000/store/67c6e409f1c07122e88619d6");

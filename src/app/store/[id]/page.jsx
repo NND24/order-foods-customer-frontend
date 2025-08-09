@@ -283,7 +283,7 @@ const page = () => {
                   <span className='text-[#4A4B4D] text-xl font-bold truncate'>{storeInfo?.name}</span>
 
                   {/* Categories */}
-                  <div className='mt-1 text-sm text-gray-500 line-clamp-2'>
+                  <div className='text-sm text-gray-500 line-clamp-2'>
                     {storeInfo?.storeCategory &&
                       storeInfo?.storeCategory.map((category, index) => (
                         <div key={category._id || index} className='inline'>
@@ -297,22 +297,29 @@ const page = () => {
                       ))}
                   </div>
 
-                  {/* Rating */}
-                  <div className='flex items-center gap-2 mt-1 text-sm'>
-                    {storeInfo?.avgRating !== 0 && (
-                      <>
-                        <Image src='/assets/star_active.png' alt='rating' width={18} height={18} />
-                        <span className='text-[#fc6011] font-medium'>{storeInfo?.avgRating.toFixed(2)}</span>
-                      </>
-                    )}
-                    {storeInfo?.amountRating !== 0 && (
-                      <span className='text-gray-500'>({storeInfo?.amountRating} đánh giá)</span>
-                    )}
-                  </div>
-
                   {/* Description */}
                   {storeInfo?.description && (
-                    <span className='text-gray-500 text-sm pt-1 line-clamp-1'>{storeInfo?.description}</span>
+                    <span className='text-gray-500 text-sm line-clamp-1'>{storeInfo?.description}</span>
+                  )}
+
+                  {/* Giờ mở cửa & trạng thái */}
+                  {storeInfo?.openHour && storeInfo?.closeHour && (
+                    <div className='flex flex-col sm:flex-row items-start sm:items-center gap-2 text-sm'>
+                      <span className='text-gray-500 line-clamp-1'>
+                        {`Giờ mở cửa: ${storeInfo.openHour} - ${storeInfo.closeHour}`}
+                      </span>
+                      <span
+                        className={`inline-flex items-center gap-1 px-3 py-[4px] rounded-full text-xs font-semibold shadow-md backdrop-blur-sm border transition-all duration-300 whitespace-nowrap
+    ${
+      storeInfo.openStatus === "OPEN"
+        ? "bg-green-500/60 border-green-400 text-white hover:bg-green-500/80"
+        : "bg-red-500/60 border-red-400 text-white hover:bg-red-500/80"
+    }
+  `}
+                      >
+                        {storeInfo.openStatus === "OPEN" ? <span>Đang mở cửa</span> : <span>Đã đóng cửa</span>}
+                      </span>
+                    </div>
                   )}
                 </div>
 

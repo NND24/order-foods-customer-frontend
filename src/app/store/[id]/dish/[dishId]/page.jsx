@@ -13,6 +13,7 @@ import { dishService } from "@/api/dishService";
 import { useAuth } from "@/context/authContext";
 import { cartService } from "@/api/cartService";
 import { Atom } from "react-loading-indicators";
+import Swal from "sweetalert2";
 
 const page = () => {
   const { id: storeId, dishId } = useParams();
@@ -224,7 +225,20 @@ const page = () => {
     if (user) {
       try {
         await cartService.updateCart({ storeId, dishId, quantity, toppings, note });
-        toast.success("Cập nhật giỏ hàng thành công");
+        // Swal.fire({
+        //   toast: true,
+        //   icon: "success",
+        //   title: "Cập nhật giỏ hàng thành công",
+        //   showConfirmButton: false,
+        //   timer: 2000,
+        //   timerProgressBar: true,
+        // });
+
+        Swal.fire({
+          title: "Cập nhật giỏ hàng thành công",
+          icon: "success",
+        });
+
         refreshCart();
       } catch (error) {
         console.error(error);
