@@ -1,6 +1,6 @@
 // tests/fixtures/authHelper.js
 const LEGIT = {
-  email: "n21dccn003@student.ptithcm.edu.vn",
+  email: "ngocdatnguyen2404@gmail.com",
   password: "123456789",
 };
 
