@@ -156,83 +156,95 @@ const page = () => {
   };
 
   const handleCompleteCart = async () => {
-    if (detailCart?.store?.openStatus === "CLOSED") {
-      toast.error("Cửa hàng đã đóng cửa, không thể đặt hàng. Vui lòng quay lại sau!");
-      return;
-    }
-
-    const outOfStockItems = detailCart?.items.filter((item) => {
-      console.log("item.dish.stockStatus: ", item.dish.stockStatus);
-      return item.dish.stockStatus === "OUT_OF_STOCK";
-    });
-
-    if (outOfStockItems.length > 0) {
-      toast.error("Có món ăn hiện đang hết hàng, không thể đặt hàng. Vui lòng quay lại sau!");
-      return;
-    }
-
-    if (storeLocation.lat === 200) {
-      toast.error("Vui lòng chọn địa chỉ giao hàng");
-    } else if (!storeLocation.contactName) {
-      toast.error("Vui lòng nhập tên người nhận");
-    } else if (!storeLocation.contactPhonenumber) {
-      toast.error("Vui lòng nhập số điện thoại người nhận");
-    } else {
-      try {
-        if (paymentMethod === "VNPay") {
-          console.log(detailCart);
-          if (detailCart && detailCart.cartId) {
-            const redirectUrlRepsonse = await paymentService.createVNPayOrder(detailCart.cartId, {
-              paymentMethod: "vnpay",
-              deliveryAddress: storeLocation.address,
-              customerName: storeLocation.contactName,
-              customerPhonenumber: storeLocation.contactPhonenumber,
-              detailAddress: storeLocation.detailAddress,
-              note: storeLocation.note,
-              location: [storeLocation.lon, storeLocation.lat],
-              shippingFee: shippingFee,
-              vouchers: selectedVouchers,
-            });
-            console.log(redirectUrlRepsonse);
-            if (redirectUrlRepsonse.paymentUrl) {
-              router.push(redirectUrlRepsonse.paymentUrl);
-              // refreshOrder();
-              // refreshCart();
-            } else {
-              toast.error("Lỗi phương thức thanh toán online");
-            }
-          } else {
-            toast.error("CartId không thể truy vấn");
-          }
-        } else {
-          // Thanh toán tiền mặt như cũ
-          const response = await cartService.completeCart({
-            storeId,
-            paymentMethod: "cash",
-            deliveryAddress: storeLocation.address,
-            customerName: storeLocation.contactName,
-            customerPhonenumber: storeLocation.contactPhonenumber,
-            detailAddress: storeLocation.detailAddress,
-            note: storeLocation.note,
-            location: [storeLocation.lon, storeLocation.lat],
-            shippingFee: shippingFee,
-            vouchers: selectedVouchers,
-          });
-          if (response && response.orderId) {
-            toast.success("Đặt thành công");
-            refreshOrder();
-            refreshCart();
-            router.push(`/orders/detail-order/${response.orderId}`);
-          } else {
-            toast.error("Lỗi phương thức thanh toán tiền mặt");
-          }
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Thanh toán thất bại");
+    try {
+      // --- Basic cart checks ---
+      if (!detailCart || !Array.isArray(detailCart.items) || detailCart.items.length === 0) {
+        toast.error("Giỏ hàng trống hoặc không thể truy vấn.");
+        return;
       }
+  
+      if (detailCart?.store?.openStatus === "CLOSED") {
+        toast.error("Cửa hàng đã đóng cửa, không thể đặt hàng. Vui lòng quay lại sau!");
+        return;
+      }
+  
+      const outOfStockItems =
+        detailCart.items?.filter((item) => item?.dish?.stockStatus === "OUT_OF_STOCK") ?? [];
+      if (outOfStockItems.length > 0) {
+        toast.error("Có món ăn hiện đang hết hàng, không thể đặt hàng. Vui lòng quay lại sau!");
+        return;
+      }
+  
+      // --- Address / contact checks ---
+      if (storeLocation?.lat === 200 || storeLocation?.lat == null || storeLocation?.lon == null) {
+        toast.error("Vui lòng chọn địa chỉ giao hàng");
+        return;
+      }
+      if (!storeLocation?.contactName?.trim()) {
+        toast.error("Vui lòng nhập tên người nhận");
+        return;
+      }
+      if (!storeLocation?.contactPhonenumber?.trim()) {
+        toast.error("Vui lòng nhập số điện thoại người nhận");
+        return;
+      }
+  
+      // Common payload
+      const commonPayload = {
+        deliveryAddress: storeLocation.address,
+        customerName: storeLocation.contactName,
+        customerPhonenumber: storeLocation.contactPhonenumber,
+        detailAddress: storeLocation.detailAddress,
+        note: storeLocation.note,
+        location: [storeLocation.lon, storeLocation.lat],
+        vouchers: selectedVouchers,
+      };
+  
+      // --- Payment flows ---
+      if (paymentMethod === "VNPay") {
+        if (!detailCart.cartId) {
+          toast.error("CartId không thể truy vấn");
+          return;
+        }
+  
+        const redirectUrlResponse = await paymentService.createVNPayOrder(detailCart.cartId, {
+          paymentMethod: "vnpay",
+          ...commonPayload,
+        });
+  
+        if (redirectUrlResponse?.paymentUrl) {
+          router.push(redirectUrlResponse.paymentUrl);
+          // refreshOrder?.();
+          // refreshCart?.();
+          return;
+        } else {
+          toast.error("Lỗi phương thức thanh toán online");
+          return;
+
+        }
+      }
+  
+      // Cash (default) flow
+      const response = await cartService.completeCart({
+        storeId,
+        paymentMethod: "cash",
+        ...commonPayload,
+      });
+  
+      if (response?.orderId) {
+        toast.success("Đặt thành công");
+        refreshOrder?.();
+        refreshCart?.();
+        router.push(`/orders/detail-order/${response.orderId}`);
+      } else {
+        toast.error("Lỗi phương thức thanh toán tiền mặt");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Thanh toán thất bại");
     }
   };
+  
 
   const warningShownRef = useRef(false);
 
