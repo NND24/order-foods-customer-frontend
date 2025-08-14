@@ -44,14 +44,36 @@ const CartItem = ({ cartItem }) => {
       href={`/store/${cartItem.store._id}`}
       className='relative block bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform duration-300 overflow-hidden'
     >
-      {/* Ảnh cửa hàng */}
-      <div className='relative w-full pt-[55%]'>
-        <Image
-          src={cartItem.store.avatar.url || "/placeholder.png"}
-          alt={cartItem.store.name}
-          fill
-          className='object-cover rounded-t-2xl'
-        />
+      <div className='relative w-full h-56 rounded-t-2xl overflow-hidden'>
+        {cartItem.items.slice(0, 4).map((item, index) => {
+          const total = cartItem.items.length;
+          const imageUrl = item.dish?.image?.url || "/assets/logo_app.png";
+
+          let className = "absolute w-full h-full";
+          if (total === 2) {
+            className = `absolute w-2/3 h-2/3 rounded-xl ${index === 0 ? "top-0 left-0 z-0" : "bottom-0 right-0 z-10"}`;
+          } else if (total === 3) {
+            if (index === 0) {
+              className = "absolute top-0 left-0 w-full h-1/2";
+            } else {
+              className = `absolute bottom-0 w-1/2 h-1/2 ${index === 1 ? "left-0" : "right-0"}`;
+            }
+          } else if (total >= 4) {
+            const positions = ["top-0 left-0", "top-0 right-0", "bottom-0 left-0", "bottom-0 right-0"];
+            className = `absolute w-1/2 h-1/2 ${positions[index]}`;
+          }
+
+          return (
+            <div key={index} className={className}>
+              <Image src={imageUrl} alt={item.dishName} fill className='object-cover rounded-xl' />
+              {total > 4 && index === 3 && (
+                <div className='absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center rounded-xl'>
+                  <span className='text-white text-lg font-semibold'>+{total - 4}</span>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
 
       {/* Nội dung */}
@@ -61,29 +83,14 @@ const CartItem = ({ cartItem }) => {
           <p className='text-gray-700 font-medium text-sm'>{quantity} món</p>
         </div>
 
-        {/* Danh mục */}
-        <div className='text-gray-600 text-sm mb-2 truncate'>
-          {cartItem.store.storeCategory.map((category, index) => (
-            <span key={category._id}>
-              {category.name}
-              {index !== cartItem.store.storeCategory.length - 1 && <span className='text-orange-500'> • </span>}
+        {/* Danh sách món ăn */}
+        <div className='text-gray-600 text-sm mb-2 line-clamp-1'>
+          {cartItem.items.map((item, index) => (
+            <span key={index}>
+              {item.dishName} x{item.quantity}
+              {index !== cartItem.items.length - 1 && <span className='text-orange-500'> • </span>}
             </span>
           ))}
-        </div>
-
-        {/* Rating */}
-        <div className='flex items-center gap-2 mt-2'>
-          {cartItem.store.avgRating > 0 && (
-            <>
-              <div className='relative w-4 h-4'>
-                <Image src='/assets/star_active.png' alt='rating' fill className='object-contain' />
-              </div>
-              <span className='text-orange-500 text-sm font-medium'>{cartItem.store.avgRating.toFixed(1)}</span>
-            </>
-          )}
-          {cartItem.store.amountRating > 0 && (
-            <span className='text-gray-500 text-sm'>({cartItem.store.amountRating} đánh giá)</span>
-          )}
         </div>
       </div>
 

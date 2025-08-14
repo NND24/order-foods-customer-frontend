@@ -17,8 +17,8 @@ import { useSearchParams } from "next/navigation";
 
 const Page = () => {
   const router = useRouter();
-  const searchParams = useSearchParams()
-  const paymentStatus = searchParams.get('status')
+  const searchParams = useSearchParams();
+  const paymentStatus = searchParams.get("status");
 
   const { orderId } = useParams();
 
@@ -39,19 +39,18 @@ const Page = () => {
   };
 
   useEffect(() => {
-    if (paymentStatus === 'success') {
-      toast.success("Thanh toán thành công")
+    if (paymentStatus === "success") {
+      toast.success("Thanh toán thành công");
       // Remove `payment` param from URL without reload
-      const url = new URL(window.location.href)
-      url.searchParams.delete('status')
-      window.history.replaceState({}, '', url)
+      const url = new URL(window.location.href);
+      url.searchParams.delete("status");
+      window.history.replaceState({}, "", url);
     }
-  }, [paymentStatus])
-
+  }, [paymentStatus]);
 
   useEffect(() => {
     getOrderDetail();
-    console.log(orderDetail)
+    console.log(orderDetail);
   }, []);
 
   useEffect(() => {
@@ -327,9 +326,9 @@ const Page = () => {
                       <div className='relative w-7 pt-7'>
                         <Image
                           src={
-                            orderDetail?.paymentMethod !== 'vnpay' || orderDetail?.paymentStatus !== 'paid'
-                              ? '/assets/button_active.png'
-                              : '/assets/button.png'
+                            orderDetail?.paymentMethod !== "vnpay" || orderDetail?.paymentStatus !== "paid"
+                              ? "/assets/button_active.png"
+                              : "/assets/button.png"
                           }
                           alt=''
                           layout='fill'
@@ -349,9 +348,9 @@ const Page = () => {
                       <div className='relative w-7 pt-7'>
                         <Image
                           src={
-                            orderDetail?.paymentMethod === 'vnpay' && orderDetail?.paymentStatus === 'paid'
-                              ? '/assets/button_active.png'
-                              : '/assets/button.png'
+                            orderDetail?.paymentMethod === "vnpay" && orderDetail?.paymentStatus === "paid"
+                              ? "/assets/button_active.png"
+                              : "/assets/button.png"
                           }
                           alt=''
                           layout='fill'
@@ -393,6 +392,7 @@ const Page = () => {
                   <OrderSummary
                     detailItems={orderDetail?.items}
                     subtotalPrice={orderDetail?.subtotalPrice}
+                    shippingFee={orderDetail?.shippingFee}
                     totalDiscount={orderDetail?.totalDiscount}
                   />
                 </div>

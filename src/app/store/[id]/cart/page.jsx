@@ -15,6 +15,7 @@ import { useCart } from "@/context/cartContext";
 import { useOrder } from "@/context/orderContext";
 import { useVoucher } from "@/context/voucherContext";
 import { paymentService } from "@/api/paymentService";
+import { shippingFeeService } from "@/api/shippingFeeService";
 
 const page = () => {
   const router = useRouter();
@@ -25,8 +26,9 @@ const page = () => {
   const [detailCart, setDetailCart] = useState(null);
   const [storeCart, setStoreCart] = useState(null);
   const [subtotalPrice, setSubtotalPrice] = useState(0);
+  const [shippingFee, setShippingFee] = useState(0);
   const [totalDiscount, setTotalDiscount] = useState(0);
-  const [paymentMethod, setPaymentMethod] = useState("VNPay");
+  const [paymentMethod, setPaymentMethod] = useState("cash");
 
   const { user } = useAuth();
   const { refreshCart, cart } = useCart();
@@ -108,6 +110,31 @@ const page = () => {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const fetchShippingFee = async () => {
+      if (
+        storeLocation &&
+        storeLocation.lat !== 200 &&
+        detailCart?.store?.address?.lat &&
+        detailCart?.store?.address?.lon
+      ) {
+        try {
+          const res = await shippingFeeService.calculateShippingFee(storeId, {
+            distanceKm: haversineDistance(
+              [storeLocation.lat, storeLocation.lon],
+              [detailCart?.store.address.lat, detailCart?.store.address.lon]
+            ).toFixed(2),
+          });
+          if (res?.fee) {
+            setShippingFee(res.fee);
+          }
+        } catch (error) {setShippingFee(0);}
+      }
+    };
+
+    fetchShippingFee();
+  }, [storeLocation, detailCart, subtotalPrice]);
 
   const calculateCartPrice = () => {
     const { subtotalPrice } = detailCart?.items.reduce(
@@ -193,6 +220,7 @@ const page = () => {
         } else {
           toast.error("Lỗi phương thức thanh toán online");
           return;
+
         }
       }
   
@@ -233,9 +261,9 @@ const page = () => {
         [detailCart?.store.address.lat, detailCart?.store.address.lon]
       );
 
-      if (distance > 15) {
+      if (distance > 20) {
         toast.warn(
-          "Khoảng cách giao hàng hơn 15km. Vui lòng kiểm tra lại địa chỉ. Nếu vẫn đặt đơn hàng có thể không được hoàn thành"
+          "Khoảng cách giao hàng hơn 20km. Vui lòng kiểm tra lại địa chỉ. Nếu vẫn đặt đơn hàng có thể không được hoàn thành"
         );
         warningShownRef.current = true;
       }
@@ -423,6 +451,7 @@ const page = () => {
                 <OrderSummary
                   detailItems={detailCart?.items}
                   subtotalPrice={subtotalPrice}
+                  shippingFee={shippingFee}
                   totalDiscount={totalDiscount}
                 />
               </div>
@@ -441,7 +470,7 @@ const page = () => {
             <div className='flex items-center justify-between pb-[8px] lg:w-[60%] md:w-[80%] md:mx-auto'>
               <span className='text-[#000] text-[18px]'>Tổng cộng</span>
               <span className='text-[#4A4B4D] text-[24px] font-semibold'>
-                {Number((subtotalPrice - totalDiscount).toFixed(0)).toLocaleString("vi-VN")}đ
+                {Number((subtotalPrice - totalDiscount + shippingFee).toFixed(0)).toLocaleString("vi-VN")}đ
               </span>
             </div>
             <div

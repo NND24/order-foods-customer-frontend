@@ -1,6 +1,6 @@
 import React from "react";
 
-const OrderSummary = ({ detailItems, subtotalPrice, totalDiscount }) => {
+const OrderSummary = ({ detailItems, subtotalPrice, shippingFee, totalDiscount }) => {
   return (
     <>
       <div className='pb-[20px] flex items-center justify-between'>
@@ -61,11 +61,17 @@ const OrderSummary = ({ detailItems, subtotalPrice, totalDiscount }) => {
               <span className='text-[#4A4B4D]'>{Number(totalDiscount.toFixed(0)).toLocaleString("vi-VN")}đ</span>
             </div>
           )}
+          {shippingFee > 0 && (
+            <div className='flex items-center justify-between'>
+              <span className='text-[#4A4B4D]'>Phí vận chuyển</span>
+              <span className='text-[#4A4B4D]'>{Number(shippingFee.toFixed(0)).toLocaleString("vi-VN")}đ</span>
+            </div>
+          )}
           {
             <div className='flex items-center justify-between'>
               <span className='text-[#4A4B4D] font-bold'>Tổng cộng</span>
               <span className='text-[#4A4B4D]'>
-                {Number((subtotalPrice - totalDiscount).toFixed(0)).toLocaleString("vi-VN")}đ
+                {Number((subtotalPrice - totalDiscount + shippingFee).toFixed(0)).toLocaleString("vi-VN")}đ
               </span>
             </div>
           }
