@@ -14,10 +14,17 @@ test.describe("Main success case (CEG)", () => {
     // Login
     await page.goto("http://localhost:3000/auth/login");
     await page.getByRole("textbox", { name: "Nhập email của bạn" }).click();
-    await page.getByRole("textbox", { name: "Nhập email của bạn" }).fill(LEGIT.email);
-    await page.getByRole("textbox", { name: "Nhập mật khẩu của bạn" }).click();
-    await page.getByRole("textbox", { name: "Nhập mật khẩu của bạn" }).fill(LEGIT.password);
+    await page
+        .getByRole("textbox", { name: "Nhập email của bạn" })
+        .fill(LEGIT.email);
+    await page
+        .getByRole("textbox", { name: "Nhập mật khẩu của bạn" })
+        .click();
+    await page
+        .getByRole("textbox", { name: "Nhập mật khẩu của bạn" })
+        .fill(LEGIT.password);
     await page.getByRole("button", { name: "Đăng nhập" }).click();
+    await page.waitForTimeout(2000);
 
     // Navigate to restaurant
     await page.goto("http://localhost:3000/store/67c6e409f1c07122e88619d6");
@@ -34,14 +41,17 @@ test.describe("Main success case (CEG)", () => {
       .filter({ hasText: /^Sốt H&S \(1 hủ\)$/ })
       .locator("img")
       .click();
-    await page.locator("img:nth-child(3)").click();
-
+    await page.getByRole("button", { name: "Increase" }).click();
     const addCartBtn = page.locator('div[name="addCartBtn"]');
     await addCartBtn.click();
-
+    await page.waitForTimeout(2000);
+    await page.getByRole('button', { name: 'OK' }).click();
+    await page.getByRole("link").filter({ hasText: /^$/ }).nth(1).click(); // Exit
     // Proceed to cart and place order
+    await page.waitForTimeout(2000);
     const cartDetailBtn = page.locator('a[name="cartDetailBtn"]');
     await cartDetailBtn.click();
+    await page.waitForTimeout(2000);
     await page
       .locator("div")
       .filter({ hasText: /^Đặt đơn$/ })

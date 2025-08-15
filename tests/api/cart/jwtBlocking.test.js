@@ -1,4 +1,5 @@
 const request = require("supertest");
+const { test, expect, beforeAll, describe } = require('@playwright/test');
 
 const BASE_URL = "http://localhost:5000";
 const LOGIN_ENDPOINT = "/api/v1/auth/login";
