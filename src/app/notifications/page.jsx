@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSocket } from "@/context/socketContext";
 import Header from "@/components/header/Header";
 import MobileHeader from "@/components/header/MobileHeader";
@@ -34,13 +34,16 @@ const page = () => {
       <div className='pt-[20px] lg:w-[60%] md:w-[80%] md:mx-auto'>
         {notifications && notifications.length > 0 ? (
           <>
-            {notifications.map((notification, index) => (
-              <NotificationItem
-                key={index}
-                notification={notification}
-                handleNotificationStatusChange={handleNotificationStatusChange}
-              />
-            ))}
+            {notifications
+              ?.slice()
+              .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map((notification, index) => (
+                <NotificationItem
+                  key={index}
+                  notification={notification}
+                  handleNotificationStatusChange={handleNotificationStatusChange}
+                />
+              ))}
           </>
         ) : (
           <div className='flex flex-col items-center text-center py-10'>
