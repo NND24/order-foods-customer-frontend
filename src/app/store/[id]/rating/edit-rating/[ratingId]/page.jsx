@@ -48,7 +48,7 @@ const EditRatingPage = () => {
         formData.append("file", data[i]);
       }
 
-      const result = await uploadService.uploadImages(formData).unwrap();
+      const result = await uploadService.uploadImages(formData);
       setImages((prev) => [...prev, ...result]);
     } catch (error) {
       console.error("Lỗi tải ảnh:", error);

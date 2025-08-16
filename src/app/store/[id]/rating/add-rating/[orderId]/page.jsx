@@ -49,7 +49,7 @@ const Page = () => {
       formData.append("file", data[i]);
     }
     try {
-      const result = await uploadService.uploadImages(formData).unwrap();
+      const result = await uploadService.uploadImages(formData);
       return result;
     } catch (error) {
       console.error("Lỗi khi tải ảnh:", error);
