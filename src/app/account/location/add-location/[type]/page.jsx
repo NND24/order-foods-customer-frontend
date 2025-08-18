@@ -180,7 +180,7 @@ const page = () => {
               value={formik.values.contactName}
               onChange={formik.handleChange("contactName")}
               onBlur={formik.handleBlur("contactName")}
-              placeholder=''
+              placeholder='Nhập tên người nhận'
               className='bg-transparent text-[18px] md:text-[14px] w-full'
             />
           </div>
@@ -198,7 +198,7 @@ const page = () => {
               value={formik.values.contactPhonenumber}
               onChange={formik.handleChange("contactPhonenumber")}
               onBlur={formik.handleBlur("contactPhonenumber")}
-              placeholder=''
+              placeholder='Nhập số điện thoại người nhận'
               className='bg-transparent text-[18px] md:text-[14px] w-full'
             />
           </div>

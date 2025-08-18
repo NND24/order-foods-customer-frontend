@@ -154,7 +154,7 @@ const page = () => {
             </div>
             <input
               type='text'
-              name=''
+              name='contactName'
               id=''
               placeholder=''
               onChange={(e) => setContactName(e.target.value)}
@@ -173,7 +173,7 @@ const page = () => {
             </div>
             <input
               type='text'
-              name=''
+              name='contactPhonenumber'
               id=''
               placeholder=''
               onChange={(e) => setContactPhonenumber(e.target.value)}
