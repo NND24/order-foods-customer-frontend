@@ -4,10 +4,13 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "@/context/authContext";
 import { provinces } from "@/utils/constants";
 import { getClosestProvince } from "@/utils/functions";
+import { useSocket } from "@/context/socketContext";
 
 const MobileHeader = ({ page }) => {
   const [province, setProvince] = useState({ name: "", lat: 200, lon: 200 });
   const [openSelectProvince, setOpenSelectProvince] = useState(false);
+
+  const { notifications } = useSocket();
 
   const { user } = useAuth();
 
@@ -89,6 +92,14 @@ const MobileHeader = ({ page }) => {
               >
                 Thông báo
               </p>
+
+              {notifications.filter((noti) => noti.status === "unread").length > 0 && (
+                <div className='absolute top-[-6px] right-[6px] w-[21px] h-[21px] text-center rounded-full bg-[#fc6011] border-solid border-[1px] border-white flex items-center justify-center'>
+                  <span className='text-[11px] text-white'>
+                    {notifications.filter((noti) => noti.status === "unread").length}
+                  </span>
+                </div>
+              )}
             </Link>
           </>
         )}

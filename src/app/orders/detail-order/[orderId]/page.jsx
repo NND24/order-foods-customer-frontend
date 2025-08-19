@@ -197,7 +197,7 @@ const Page = () => {
                       </button>
                     </div>
                   )}
-                  {(orderDetail?.status === "finished" || orderDetail?.status === "taken") && (
+                  {orderDetail?.status === "taken" && (
                     <div className='hidden sm:block'>
                       <button
                         className='flex items-center gap-2 px-4 py-2 text-nowrap rounded-full bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-xl transition hover:scale-105'
@@ -250,9 +250,7 @@ const Page = () => {
 
                       <Image
                         src={`/assets/delivery${
-                          ["finished", "taken", "delivering", "delivered", "done"].includes(orderDetail?.status)
-                            ? "_active"
-                            : ""
+                          ["taken", "delivering", "delivered", "done"].includes(orderDetail?.status) ? "_active" : ""
                         }.png`}
                         alt=''
                         width={25}
@@ -412,7 +410,7 @@ const Page = () => {
                     </div>
                   )}
 
-                  {(orderDetail?.status === "finished" || orderDetail?.status === "taken") && (
+                  {orderDetail?.status === "taken" && (
                     <div className='block sm:hidden'>
                       <button
                         className='w-full sm:w-auto px-6 py-3 rounded-lg bg-gradient-to-r from-[#fc6011] to-[#ff8743] text-white font-semibold shadow-md hover:shadow-lg hover:scale-105 transition-all'
