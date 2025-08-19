@@ -130,7 +130,7 @@ const page = () => {
           </Link>
         )}
 
-        <div className='bg-[#fff] flex items-center justify-between border-b-[1px] border-t-[0px] border-x-[0px] border-b-[#a3a3a3] border-solid px-[8px] py-[12px] my-[20px]'>
+        {/* <div className='bg-[#fff] flex items-center justify-between border-b-[1px] border-t-[0px] border-x-[0px] border-b-[#a3a3a3] border-solid px-[8px] py-[12px] my-[20px]'>
           <div className='flex items-center gap-[10px]'>
             <div className='relative w-[30px] pt-[30px] md:w-[25px] md:pt-[25px]'>
               <Image src='/assets/setting.png' alt='' layout='fill' objectFit='contain' />
@@ -140,7 +140,7 @@ const page = () => {
           <div className='relative w-[25px] pt-[25px] md:w-[20px] md:pt-[20px]'>
             <Image src='/assets/arrow_right.png' alt='' layout='fill' objectFit='contain' />
           </div>
-        </div>
+        </div> */}
 
         <button
           onClick={confirmLogout}

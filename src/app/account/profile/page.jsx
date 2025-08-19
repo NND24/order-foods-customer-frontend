@@ -19,7 +19,7 @@ const page = () => {
 
   const [avatarFile, setAvatarFile] = useState(null);
 
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
 
   const handleUploadAvatar = async () => {
     if (avatarFile) {
@@ -30,6 +30,8 @@ const page = () => {
         }
         await uploadService.uploadAvatar(formData);
         setAvatarFile(null);
+
+        await fetchUser(user?._id);
       } catch (error) {
         console.error(error);
       }
@@ -60,8 +62,8 @@ const page = () => {
     onSubmit: async (values) => {
       try {
         await userService.updateUser(values);
-
         toast.success("Cập nhật thành công!");
+        await fetchUser(user?._id);
       } catch (error) {
         console.error(error);
       }

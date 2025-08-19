@@ -74,7 +74,7 @@ const page = () => {
       address: locationData?.address || "",
       location: {
         type: "Point",
-        coordinates: [locationData?.location?.coordinates[1] ?? 200, locationData?.location?.coordinates[0] ?? 200],
+        coordinates: [locationData?.location?.coordinates[0] ?? 200, locationData?.location?.coordinates[1] ?? 200],
       },
       detailAddress: locationData?.detailAddress || "",
       note: locationData?.note || "",
