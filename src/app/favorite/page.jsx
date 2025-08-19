@@ -11,6 +11,7 @@ import { useFavorite } from "@/context/favoriteContext";
 import { favoriteService } from "@/api/favoriteService";
 import FavoriteItem from "@/components/favorite/FavoriteItem";
 import { Atom } from "react-loading-indicators";
+import Link from "next/link";
 
 const page = () => {
   const { favorite, loading, refreshFavorite } = useFavorite();
@@ -76,12 +77,12 @@ const page = () => {
                 <Image src='/assets/no_favorite.png' alt='empty cart' width={150} height={150} />
                 <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Yêu thích trống</h3>
                 <p className='text-gray-500 mt-2'>Hãy tìm cửa hàng yêu thích!</p>
-                <button
-                  onClick={() => router.push("/search")}
+                <Link
+                  href={`/search`}
                   className='mt-5 px-6 py-3 bg-[#fc6011] text-white rounded-full shadow hover:scale-105 transition-transform'
                 >
                   Tìm kiếm ngay
-                </button>
+                </Link>
               </div>
             )}
           </>

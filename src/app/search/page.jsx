@@ -33,7 +33,7 @@ const page = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [page, allStore]);
+  }, [query.page, allStore]);
 
   return (
     <>
@@ -168,7 +168,7 @@ const page = () => {
               </div>
             </div>
 
-            {allStore?.data?.length > 0 && <Pagination page={page} limit={query.limit} total={allStore.total} />}
+            {allStore?.data?.length > 0 && <Pagination page={query.page} limit={query.limit} total={allStore.total} />}
           </div>
         </div>
       )}

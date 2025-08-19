@@ -11,6 +11,7 @@ import CartItem from "@/components/cart/CartItem";
 import { cartService } from "@/api/cartService";
 import { useCart } from "@/context/cartContext";
 import { Atom } from "react-loading-indicators";
+import Link from "next/link";
 
 const page = () => {
   const { cart, loading, refreshCart } = useCart();
@@ -83,12 +84,12 @@ const page = () => {
                 />
                 <h3 className='text-[#4A4B4D] text-2xl font-bold mt-4'>Giỏ hàng trống</h3>
                 <p className='text-gray-500 mt-2'>Hãy chọn vài món ăn ngon ngay nào!</p>
-                <button
-                  onClick={() => router.push("/search")}
+                <Link
+                  href={`/search`}
                   className='mt-5 px-6 py-3 bg-[#fc6011] text-white rounded-full shadow hover:scale-105 transition-transform'
                 >
                   Mua sắm ngay
-                </button>
+                </Link>
               </div>
             )}
           </>

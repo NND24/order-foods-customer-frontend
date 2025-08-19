@@ -3,6 +3,7 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Pagination = ({ page, limit, total }) => {
+  console.log({ page, limit, total });
   page = Number(page);
   const router = useRouter();
   const totalPages = Math.ceil(total / limit);
@@ -31,7 +32,7 @@ const Pagination = ({ page, limit, total }) => {
           className='pr-3 pl-2 py-2 mr-2 text-[#e0e0e0] border-[#e0e0e0] border-[1px] border-solid rounded-[6px] h-[40px]'
           onClick={() => handlePageChange(page - 1)}
         >
-          <Image src='/assets/arrow_left.png' alt='Prev' width={20} height={20} />
+          <Image src='/assets/arrow_left.png' alt='Prev' width={16} height={16} />
         </button>
       )}
 
@@ -57,7 +58,7 @@ const Pagination = ({ page, limit, total }) => {
           className='pr-2 pl-3 py-2 mr-2 text-[#e0e0e0] border-[#e0e0e0] border-[1px] border-solid rounded-[6px] h-[40px]'
           onClick={() => handlePageChange(page + 1)}
         >
-          <Image src='/assets/arrow_right.png' alt='Next' width={20} height={20} />
+          <Image src='/assets/arrow_right.png' alt='Next' width={16} height={16} />
         </button>
       )}
     </div>
