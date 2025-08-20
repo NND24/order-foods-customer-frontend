@@ -168,7 +168,7 @@ const page = () => {
           </div>
 
           <p className='text-[#636464] font-semibold mt-[20px]'>
-            Chưa có mật khẩu?{" "}
+            Chưa có tài khoản?{" "}
             <Link href='/auth/register' className='text-[#fc6011] cursor-pointer'>
               Đăng ký
             </Link>
