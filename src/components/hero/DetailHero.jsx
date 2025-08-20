@@ -42,7 +42,7 @@ const DetailHero = ({ store }) => {
             {store.storeCategory.slice(0, 3).map((category, index) => (
               <Link
                 href={`/search?category=${category._id}`}
-                className='text-gray-200 hover:text-white transition'
+                className='text-gray-200 hover:text-[#fc6011] transition'
                 key={category._id}
               >
                 {category.name}
