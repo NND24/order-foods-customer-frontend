@@ -16,11 +16,12 @@ import { useOrder } from "@/context/orderContext";
 import { useVoucher } from "@/context/voucherContext";
 import { paymentService } from "@/api/paymentService";
 import { shippingFeeService } from "@/api/shippingFeeService";
+import { useSearchParams } from "next/navigation";
 
 const page = () => {
   const router = useRouter();
   const { id: storeId } = useParams();
-
+  const searchParams = useSearchParams();
   const { storeLocation, setStoreLocation, storeId: storeLocationId, setStoreId } = useStoreLocation();
 
   const [detailCart, setDetailCart] = useState(null);
@@ -36,6 +37,40 @@ const page = () => {
   const { storeVouchers } = useVoucher();
 
   const selectedVouchers = storeVouchers[storeId] || [];
+
+  useEffect(() => {
+    const status = searchParams.get("status");
+  
+    if (status) {
+      // Mapping of VNPay response codes
+      const statusMessages = {
+        "00": "Giao dịch thành công",
+        "07": "Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường).",
+        "09": "Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.",
+        "10": "Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần.",
+        "11": "Đã hết hạn chờ thanh toán. Vui lòng thực hiện lại giao dịch.",
+        "12": "Thẻ/Tài khoản của khách hàng bị khóa.",
+        "13": "Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Vui lòng thực hiện lại giao dịch.",
+        "24": "Khách hàng hủy giao dịch.",
+        "51": "Tài khoản không đủ số dư để thực hiện giao dịch.",
+        "65": "Tài khoản đã vượt quá hạn mức giao dịch trong ngày.",
+        "75": "Ngân hàng thanh toán đang bảo trì.",
+        "79": "Nhập sai mật khẩu thanh toán quá số lần quy định. Vui lòng thực hiện lại.",
+        "99": "Lỗi khác (không có trong danh sách mã lỗi).",
+      };
+  
+      const message = statusMessages[status] || `Thanh toán thất bại. Mã lỗi: ${status}`;
+  
+      if (status === "00") {
+        toast.success(message);
+      } else if (status === "24") {
+        toast.warning(message);
+      } else {
+        toast.error(message);
+      }
+      router.replace(window.location.pathname);
+    }
+  }, [searchParams, router]);
 
   useEffect(() => {
     if (cart) {
