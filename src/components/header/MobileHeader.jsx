@@ -5,10 +5,13 @@ import { useAuth } from "@/context/authContext";
 import { provinces } from "@/utils/constants";
 import { getClosestProvince } from "@/utils/functions";
 import { useSocket } from "@/context/socketContext";
+import { useProvince } from "@/context/provinceContext";
 
 const MobileHeader = ({ page }) => {
   const [province, setProvince] = useState({ name: "", lat: 200, lon: 200 });
   const [openSelectProvince, setOpenSelectProvince] = useState(false);
+
+  const { setCurrentLocation, currentLocation } = useProvince();
 
   const { notifications } = useSocket();
 
@@ -16,21 +19,26 @@ const MobileHeader = ({ page }) => {
 
   const handleProvinceChange = (prov) => {
     setProvince(prov);
+    setCurrentLocation({ lat: prov.lat, lon: prov.lon });
   };
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const userLat = pos.coords.latitude;
-          const userLon = pos.coords.longitude;
+    if (currentLocation.lat !== 200) {
+      setProvince(getClosestProvince({ lat: currentLocation.lat, lon: currentLocation.lon }));
+    } else {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const userLat = pos.coords.latitude;
+            const userLon = pos.coords.longitude;
 
-          setProvince(getClosestProvince({ lat: userLat, lon: userLon }));
-        },
-        (error) => {
-          console.error("Lỗi khi lấy vị trí:", error);
-        }
-      );
+            setProvince(getClosestProvince({ lat: userLat, lon: userLon }));
+          },
+          (error) => {
+            console.error("Lỗi khi lấy vị trí:", error);
+          }
+        );
+      }
     }
   }, []);
 

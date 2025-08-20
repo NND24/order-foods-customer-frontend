@@ -7,23 +7,33 @@ import { getClosestProvince } from "../../utils/functions";
 import MobileHeader from "./MobileHeader";
 import SearchBar from "./SearchBar";
 import NavBar from "./NavBar";
+import { useProvince } from "@/context/provinceContext";
 
 const Header = ({ page }) => {
   const [province, setProvince] = useState({ name: "", lat: 200, lon: 200 });
   const [openSelectProvince, setOpenSelectProvince] = useState(false);
 
-  const handleProvinceChange = (prov) => setProvince(prov);
+  const { setCurrentLocation, currentLocation } = useProvince();
+
+  const handleProvinceChange = (prov) => {
+    setProvince(prov);
+    setCurrentLocation({ lat: prov.lat, lon: prov.lon });
+  };
 
   useEffect(() => {
-    if ("geolocation" in navigator) {
-      navigator.geolocation.getCurrentPosition(
-        async (pos) => {
-          const userLat = pos.coords.latitude;
-          const userLon = pos.coords.longitude;
-          setProvince(getClosestProvince({ lat: userLat, lon: userLon }));
-        },
-        (error) => console.error("Lỗi khi lấy vị trí:", error)
-      );
+    if (currentLocation.lat !== 200) {
+      setProvince(getClosestProvince({ lat: currentLocation.lat, lon: currentLocation.lon }));
+    } else {
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          async (pos) => {
+            const userLat = pos.coords.latitude;
+            const userLon = pos.coords.longitude;
+            setProvince(getClosestProvince({ lat: userLat, lon: userLon }));
+          },
+          (error) => console.error("Lỗi khi lấy vị trí:", error)
+        );
+      }
     }
   }, []);
 

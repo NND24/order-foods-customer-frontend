@@ -42,7 +42,7 @@ export const useStoreSearch = (query) => {
     };
 
     fetchStores();
-  }, [query, lat, lon]);
+  }, [query, lat, lon, currentLocation]);
 
   return {
     loading,
