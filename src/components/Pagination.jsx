@@ -3,7 +3,6 @@ import { useRouter } from "next/navigation";
 import React from "react";
 
 const Pagination = ({ page, limit, total }) => {
-  console.log({ page, limit, total });
   page = Number(page);
   const router = useRouter();
   const totalPages = Math.ceil(total / limit);

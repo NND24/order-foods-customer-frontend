@@ -102,22 +102,22 @@ const page = () => {
       if (item?.toppings.length > 0) {
         item.toppings.forEach((topping) => {
           setToppings((prev) => {
-            if (prev.includes(topping._id)) {
+            if (prev.includes(topping.toppingId)) {
               return [...prev];
             } else {
-              return [...prev, topping._id];
+              return [...prev, topping.toppingId];
             }
           });
 
           setToppingsValue((prev) => {
-            if (prev.some((tp) => tp._id === topping._id)) {
+            if (prev.some((tp) => tp.toppingId === topping.toppingId)) {
               return [...prev];
             } else {
               return [
                 ...prev,
                 {
                   ...topping,
-                  groupId: topping.toppingGroup,
+                  _id: topping.toppingId,
                 },
               ];
             }
@@ -174,20 +174,20 @@ const page = () => {
           setPrice((prev) => prev + priceChange);
 
           setToppings((prev) => prev.filter((id) => id !== topping._id));
-          setToppingsValue((prev) => prev.filter((tp) => tp._id !== topping._id));
+          setToppingsValue((prev) => prev.filter((tp) => tp.toppingId !== topping._id));
           return;
         } else {
           const priceChange = -prevTopping.price * quantity;
           setPrice((prev) => prev + priceChange);
 
           setToppings((prev) => prev.filter((id) => id !== prevTopping._id));
-          setToppingsValue((prev) => prev.filter((tp) => tp._id !== prevTopping._id));
+          setToppingsValue((prev) => prev.filter((tp) => tp.toppingId !== prevTopping._id));
         }
       }
 
       setToppingsValue((prev) => {
         const updated = prev.filter((item) => item.groupId !== toppingGroup._id);
-        return [...updated, { ...topping, groupId: toppingGroup._id }];
+        return [...updated, { ...topping, groupId: toppingGroup._id, _id: topping._id }];
       });
 
       setToppings((prev) => [...prev, topping._id]);
@@ -196,20 +196,25 @@ const page = () => {
       setPrice((prev) => prev + priceChange);
     } else {
       let priceChange = 0;
+      console.log(topping);
 
       if (toppings.includes(topping._id)) {
         priceChange = -toppingPrice * quantity;
         setToppings((prev) => prev.filter((id) => id !== topping._id));
-        setToppingsValue((prev) => prev.filter((tp) => tp._id !== topping._id));
+        setToppingsValue((prev) => prev.filter((tp) => tp.toppingId !== topping._id));
       } else {
         priceChange = toppingPrice * quantity;
         setToppings((prev) => [...prev, topping._id]);
-        setToppingsValue((prev) => [...prev, { ...topping, groupId: toppingGroup._id }]);
+        setToppingsValue((prev) => [...prev, { ...topping, groupId: toppingGroup._id, _id: topping._id }]);
       }
 
       setPrice((prev) => prev + priceChange);
     }
   };
+
+  useEffect(() => {
+    console.log(toppings);
+  }, [toppings]);
 
   const handleAddToCart = async () => {
     if (storeCart?.store?.openStatus === "CLOSED") {
