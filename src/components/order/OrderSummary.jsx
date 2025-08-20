@@ -32,13 +32,19 @@ const OrderSummary = ({ detailItems, subtotalPrice, shippingFee, totalDiscount }
                 <div className='flex flex-1 justify-between'>
                   <div className='flex flex-col'>
                     <h3 className='text-[#4A4B4D] text-[18px] font-bold line-clamp-1 pr-1' name='dishName'>
-                      {item.dish?.name}
+                      {item?.dishName}
                     </h3>
-                    {item.toppings.map((topping) => (
+                    {item.toppings.length > 0 &&
+                      item.toppings.map((topping) => (
+                        <p className='text-[#a4a5a8]' name='toppingName'>
+                          {topping.toppingName}
+                        </p>
+                      ))}
+                    {item.note && (
                       <p className='text-[#a4a5a8]' name='toppingName'>
-                        {topping.name}
+                        Ghi chú: {item.note}
                       </p>
-                    ))}
+                    )}
                   </div>
                   <span className='text-[#4A4B4D]' name='price'>
                     {Number(totalPrice.toFixed(0)).toLocaleString("vi-VN")}đ

@@ -129,7 +129,9 @@ const page = () => {
           if (res?.fee) {
             setShippingFee(res.fee);
           }
-        } catch (error) {setShippingFee(0);}
+        } catch (error) {
+          setShippingFee(0);
+        }
       }
     };
 
@@ -162,19 +164,18 @@ const page = () => {
         toast.error("Giỏ hàng trống hoặc không thể truy vấn.");
         return;
       }
-  
+
       if (detailCart?.store?.openStatus === "CLOSED") {
         toast.error("Cửa hàng đã đóng cửa, không thể đặt hàng. Vui lòng quay lại sau!");
         return;
       }
-  
-      const outOfStockItems =
-        detailCart.items?.filter((item) => item?.dish?.stockStatus === "OUT_OF_STOCK") ?? [];
+
+      const outOfStockItems = detailCart.items?.filter((item) => item?.dish?.stockStatus === "OUT_OF_STOCK") ?? [];
       if (outOfStockItems.length > 0) {
         toast.error("Có món ăn hiện đang hết hàng, không thể đặt hàng. Vui lòng quay lại sau!");
         return;
       }
-  
+
       // --- Address / contact checks ---
       if (storeLocation?.lat === 200 || storeLocation?.lat == null || storeLocation?.lon == null) {
         toast.error("Vui lòng chọn địa chỉ giao hàng");
@@ -188,7 +189,7 @@ const page = () => {
         toast.error("Vui lòng nhập số điện thoại người nhận");
         return;
       }
-  
+
       // Common payload
       const commonPayload = {
         deliveryAddress: storeLocation.address,
@@ -199,19 +200,19 @@ const page = () => {
         location: [storeLocation.lon, storeLocation.lat],
         vouchers: selectedVouchers,
       };
-  
+
       // --- Payment flows ---
       if (paymentMethod === "VNPay") {
         if (!detailCart.cartId) {
           toast.error("CartId không thể truy vấn");
           return;
         }
-  
+
         const redirectUrlResponse = await paymentService.createVNPayOrder(detailCart.cartId, {
           paymentMethod: "vnpay",
           ...commonPayload,
         });
-  
+
         if (redirectUrlResponse?.paymentUrl) {
           router.push(redirectUrlResponse.paymentUrl);
           // refreshOrder?.();
@@ -220,17 +221,16 @@ const page = () => {
         } else {
           toast.error("Lỗi phương thức thanh toán online");
           return;
-
         }
       }
-  
+
       // Cash (default) flow
       const response = await cartService.completeCart({
         storeId,
         paymentMethod: "cash",
         ...commonPayload,
       });
-  
+
       if (response?.orderId) {
         toast.success("Đặt thành công");
         refreshOrder?.();
@@ -244,7 +244,6 @@ const page = () => {
       toast.error("Thanh toán thất bại");
     }
   };
-  
 
   const warningShownRef = useRef(false);
 
@@ -314,11 +313,16 @@ const page = () => {
                 <Link href={`/store/${storeId}`} className='relative w-[30px] pt-[30px] md:hidden'>
                   <Image src='/assets/arrow_left_long.png' alt='' layout='fill' objectFit='contain' />
                 </Link>
-                <div className='relative w-[70px] pt-[70px] rounded-[8px] overflow-hidden hidden md:block'>
+                <Link
+                  href={`/store/${storeId}`}
+                  className='relative w-[70px] pt-[70px] rounded-[8px] overflow-hidden hidden md:block'
+                >
                   <Image src={detailCart?.store.avatar.url} alt='' layout='fill' objectFit='cover' />
-                </div>
+                </Link>
                 <div>
-                  <h3 className='text-[#4A4B4D] text-[24px] font-bold line-clamp-1'>{detailCart?.store.name}</h3>
+                  <Link href={`/store/${storeId}`} className='text-[#4A4B4D] text-[24px] font-bold line-clamp-1'>
+                    {detailCart?.store.name}
+                  </Link>
                   {storeLocation && storeLocation.lat !== 200 && (
                     <p className='text-[#636464]'>
                       Khoảng cách tới chỗ bạn{" "}

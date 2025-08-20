@@ -41,7 +41,7 @@ const CartItem = ({ cartItem }) => {
 
   return (
     <Link
-      href={`/store/${cartItem.store._id}`}
+      href={`/store/${cartItem.store._id}/cart`}
       className='relative block bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-transform duration-300 overflow-hidden'
     >
       <div className='relative w-full h-56 rounded-t-2xl overflow-hidden'>
